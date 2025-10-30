@@ -1,10 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pl">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Provercel — Barierowe rozwiązania 3D</title>
 
+  <!-- model-viewer -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
   <style>
@@ -91,8 +92,32 @@
       background:linear-gradient(90deg, rgba(0,0,0,0.15), rgba(255,255,255,0.01));
       padding:8px;
       border-radius:8px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.05);
     }
-    .option input[type="checkbox"]{width:18px; height:18px;}
+    .option::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, rgba(0,209,255,0.12), rgba(0,180,255,0.06));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      border-radius: 8px;
+    }
+    .option.selected {
+      border: 1px solid rgba(0,209,255,0.5) !important;
+      box-shadow: 0 0 14px rgba(0,209,255,0.25);
+    }
+    .option.selected::before {
+      opacity: 1;
+    }
+    .option input[type="checkbox"]{
+      width:18px; height:18px;
+      accent-color: var(--accent);
+    }
     .option .meta{font-size:13px; color:var(--muted)}
     .option .qty{
       width:50px;
@@ -132,7 +157,9 @@
       font-weight:700;
       cursor:pointer;
       box-shadow: 0 8px 24px rgba(0,209,255,0.08);
+      transition: transform 0.2s;
     }
+    button:hover { transform: translateY(-1px); }
     .small{ font-size:12px; color:var(--muted) }
 
     footer{ margin-top:12px; font-size:12px; color:var(--muted); }
@@ -153,14 +180,15 @@
 
       <div class="viewer-wrap" style="margin-top:12px;">
         <model-viewer id="mv"
-          src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
-          alt="Model barier ocynkowanych"
+          src="https://modelviewer.dev/shared-assets/models/DamagedHelmet.glb"
+          alt="Stalowa bariera ocynkowana"
           camera-controls
           auto-rotate
           ar
           ar-modes="webxr scene-viewer quick-look"
-          exposure="1"
-          shadow-intensity="0.5"
+          exposure="1.2"
+          shadow-intensity="1"
+          environment-image="neutral"
           camera-orbit="0deg 75deg 2.5m">
 
           <button slot="ar-button" style="background:#00d1ff; color:#000; border:none; padding:10px 20px; border-radius:8px; font-weight:700; margin:12px;">
@@ -169,7 +197,7 @@
 
           <div slot="fallback" style="text-align:center; padding:20px; color:#aaa; font-size:14px;">
             Model nie załadował się. <br>
-            <a href="https://provercel.vercel.app/" style="color:#00d1ff; text-decoration:underline;">Odśwież stronę</a>
+            <a href="#" onclick="location.reload()" style="color:#00d1ff; text-decoration:underline;">Odśwież stronę</a>
           </div>
         </model-viewer>
       </div>
@@ -184,47 +212,57 @@
       <div class="panel">
         <label class="section-title">Wybierz elementy</label>
         <div class="options" id="optionsList">
+          <!-- SŁUP STALOWY -->
           <label class="option">
-            <input type="checkbox" class="item-check" data-name="Słup stalowy H=1000" data-sku="SLP-1000" data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/MetalRoughSpheres/glTF/MetalRoughSpheres.gltf">
+            <input type="checkbox" class="item-check" data-name="Słup stalowy H=1000" data-sku="SLP-1000" 
+                   data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/MetalRoughSpheres/glTF/MetalRoughSpheres.gltf">
             <div style="flex:1">
               <div><strong>Słup stalowy H=1000</strong></div>
-              <div class="meta">SKU: SLP-1000 • Ø fi 60</div>
+              <div class="meta">SKU: SLP-1000 • Ø 60 mm • ocynk</div>
             </div>
             <input type="number" class="qty" min="1" value="1">
           </label>
 
+          <!-- PRZĘSŁO PROSTE 2m -->
           <label class="option">
-            <input type="checkbox" class="item-check" data-name="Przęsło proste 2m" data-sku="PRZ-2000" data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Fence/glTF/Fence.gltf">
+            <input type="checkbox" class="item-check" data-name="Przęsło proste 2m" data-sku="PRZ-2000" 
+                   data-model="https://modelviewer.dev/shared-assets/models/Chair.glb">
             <div style="flex:1">
               <div><strong>Przęsło proste 2m</strong></div>
-              <div class="meta">SKU: PRZ-2000 • ocynk</div>
+              <div class="meta">SKU: PRZ-2000 • siatka 50x50 • ocynk</div>
             </div>
             <input type="number" class="qty" min="1" value="1">
           </label>
 
+          <!-- ZŁĄCZE KĄTOWE 90° -->
           <label class="option">
-            <input type="checkbox" class="item-check" data-name="Złącze kątowe 90°" data-sku="ZLK-090" data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf">
+            <input type="checkbox" class="item-check" data-name="Złącze kątowe 90°" data-sku="ZLK-090" 
+                   data-model="https://modelviewer.dev/shared-assets/models/BoomBox.glb">
             <div style="flex:1">
               <div><strong>Złącze kątowe 90°</strong></div>
-              <div class="meta">SKU: ZLK-090 • śruby w komplecie</div>
+              <div class="meta">SKU: ZLK-090 • śruby M8 • ocynk</div>
             </div>
             <input type="number" class="qty" min="1" value="1">
           </label>
 
+          <!-- STOPKA MONTAŻOWA -->
           <label class="option">
-            <input type="checkbox" class="item-check" data-name="Stopka montażowa 150mm" data-sku="STP-150" data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/WaterBottle/glTF/WaterBottle.gltf">
+            <input type="checkbox" class="item-check" data-name="Stopka montażowa 150mm" data-sku="STP-150" 
+                   data-model="https://modelviewer.dev/shared-assets/models/WaterBottle.glb">
             <div style="flex:1">
               <div><strong>Stopka montażowa 150mm</strong></div>
-              <div class="meta">SKU: STP-150</div>
+              <div class="meta">SKU: STP-150 • 4 otwory • ocynk</div>
             </div>
             <input type="number" class="qty" min="1" value="1">
           </label>
 
+          <!-- OSŁONA KRAWĘDZIOWA -->
           <label class="option">
-            <input type="checkbox" class="item-check" data-name="Osłona krawędziowa" data-sku="OSL-001" data-model="https://modelviewer.dev/shared-assets/models/Astronaut.glb">
+            <input type="checkbox" class="item-check" data-name="Osłona krawędziowa" data-sku="OSL-001" 
+                   data-model="https://modelviewer.dev/shared-assets/models/DamagedHelmet.glb">
             <div style="flex:1">
               <div><strong>Osłona krawędziowa</strong></div>
-              <div class="meta">SKU: OSL-001</div>
+              <div class="meta">SKU: OSL-001 • guma + stal</div>
             </div>
             <input type="number" class="qty" min="1" value="1">
           </label>
@@ -237,7 +275,7 @@
         <label class="section-title">Szczegóły zapytania</label>
         <form id="requestForm" action="https://formsubmit.co/provercel@proton.me" method="POST">
           <input type="text" name="_honey" style="display:none">
-          <input type="hidden" name="_next" value="https://vercel.app/">
+          <input type="hidden" name="_next" value="https://provercel.vercel.app/">
           <input type="hidden" name="_subject" id="formSubject" value="Zapytanie z Provercel - 3D">
 
           <label class="small">Firma / Imię</label>
@@ -247,7 +285,7 @@
           <input type="email" name="client_email" placeholder="twoj@proton.me" required />
 
           <label class="small">Uwagi</label>
-          <textarea name="notes" rows="3" placeholder="Dodatkowe informacje"></textarea>
+          <textarea name="notes" rows="3" placeholder="Dodatkowe informacje (termin, montaż, itp.)"></textarea>
 
           <input type="hidden" name="selected_items" id="selected_items" value="">
 
@@ -269,7 +307,7 @@
     const formSubject = document.getElementById('formSubject');
     const form = document.getElementById('requestForm');
 
-    const DEFAULT_MODEL = 'https://modelviewer.dev/shared-assets/models/Astronaut.glb'; // Działa na pewno
+    const DEFAULT_MODEL = 'https://modelviewer.dev/shared-assets/models/DamagedHelmet.glb';
 
     function loadModel(src) {
       if (mv.src === src) return;
@@ -280,6 +318,14 @@
         mv.cameraOrbit = '0deg 75deg 2.5m';
         mv.jumpCameraToGoal();
       }, { once: true });
+    }
+
+    function updateHighlights() {
+      const options = optionsList.querySelectorAll('.option');
+      options.forEach(option => {
+        const checkbox = option.querySelector('.item-check');
+        option.classList.toggle('selected', checkbox.checked);
+      });
     }
 
     optionsList.addEventListener('change', (e) => {
@@ -294,7 +340,9 @@
         } else {
           loadModel(DEFAULT_MODEL);
         }
+
         updateSummary();
+        updateHighlights();
       }
     });
 
@@ -321,6 +369,7 @@
     }
 
     updateSummary();
+    updateHighlights();
 
     document.getElementById('resetView').addEventListener('click', () => {
       mv.cameraOrbit = '0deg 75deg 2.5m';
@@ -338,7 +387,7 @@
     form.addEventListener('submit', (e) => {
       const email = form.querySelector('input[name="client_email"]').value.trim();
       if (!/^\S+@\S+\.\S+$/.test(email)) {
-        alert('Podaj poprawny e-mail.');
+        alert('Podaj poprawny adres e-mail.');
         e.preventDefault();
         return;
       }
@@ -350,7 +399,6 @@
       } catch (err) {}
     });
 
-    // Ładuj domyślny model
     window.addEventListener('load', () => {
       loadModel(DEFAULT_MODEL);
     });
