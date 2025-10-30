@@ -5,15 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Provercel — Barierowe rozwiązania 3D</title>
 
-  <!-- SEO -->
-  <meta name="description" content="Provercel – interaktywny konfigurator barier ochronnych 3D. Wybierz słupy, przęsła, złącza i wyślij zapytanie.">
-  <link rel="canonical" href="https://provercel.vercel.app/">
-
   <!-- Model Viewer -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-
-  <!-- Preload domyślnego modelu (lepszy UX) -->
-  <link rel="preload" href="https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Box/glTF-Binary/Box.glb" as="fetch" crossorigin="anonymous">
 
   <style>
     :root{
@@ -189,7 +182,7 @@
 
       <div class="viewer-wrap" style="margin-top:12px;">
         <model-viewer id="mv"
-          src=""
+          src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf"
           alt="Podgląd 3D wybranego elementu bariery ochronnej"
           aria-label="Interaktywny model 3D bariery – obracaj, przybliżaj, użyj AR"
           camera-controls
@@ -200,14 +193,7 @@
           shadow-intensity="1"
           environment-image="neutral"
           camera-orbit="0deg 75deg 2.5m"
-          loading="lazy"
-          interaction-prompt="none"
-          touch-action="pan-y"
-          poster="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==">
-
-          <div slot="poster" style="display:flex; align-items:center; justify-content:center; height:100%; color:#9aa6b2; font-size:14px; padding:20px; text-align:center; background:#071018;">
-            Zaznacz element z listy, aby zobaczyć model 3D
-          </div>
+          loading="eager">
 
           <button slot="ar-button" style="background:#00d1ff; color:#000; border:none; padding:10px 20px; border-radius:8px; font-weight:700; margin:12px;">
             Zobacz w AR
@@ -237,7 +223,7 @@
             </div>
             <div class="qty-wrap">
               <span class="qty-label">Ilość:</span>
-              <input type="number" class="qty" min="1" max="999" value="1" step="1" inputmode="numeric">
+              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
               <span class="qty-unit">szt.</span>
             </div>
           </label>
@@ -252,7 +238,7 @@
             </div>
             <div class="qty-wrap">
               <span class="qty-label">Ilość:</span>
-              <input type="number" class="qty" min="1" max="999" value="1" step="1" inputmode="numeric">
+              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
               <span class="qty-unit">szt.</span>
             </div>
           </label>
@@ -267,7 +253,7 @@
             </div>
             <div class="qty-wrap">
               <span class="qty-label">Ilość:</span>
-              <input type="number" class="qty" min="1" max="999" value="1" step="1" inputmode="numeric">
+              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
               <span class="qty-unit">szt.</span>
             </div>
           </label>
@@ -282,7 +268,7 @@
             </div>
             <div class="qty-wrap">
               <span class="qty-label">Ilość:</span>
-              <input type="number" class="qty" min="1" max="999" value="1" step="1" inputmode="numeric">
+              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
               <span class="qty-unit">szt.</span>
             </div>
           </label>
@@ -297,7 +283,7 @@
             </div>
             <div class="qty-wrap">
               <span class="qty-label">Ilość:</span>
-              <input type="number" class="qty" min="1" max="999" value="1" step="1" inputmode="numeric">
+              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
               <span class="qty-unit">szt.</span>
             </div>
           </label>
@@ -312,13 +298,12 @@
           <input type="text" name="_honey" style="display:none">
           <input type="hidden" name="_next" value="https://provercel.vercel.app/">
           <input type="hidden" name="_subject" id="formSubject" value="Zapytanie z Provercel - 3D">
-          <input type="hidden" name="_captcha" value="false">
 
           <label class="small">Firma / Imię</label>
-          <input type="text" name="client_name" placeholder="Nazwa firmy lub imię" autocomplete="organization" />
+          <input type="text" name="client_name" placeholder="Nazwa firmy lub imię" />
 
           <label class="small">Adres e-mail</label>
-          <input type="email" name="client_email" placeholder="twoj@proton.me" required autocomplete="email" />
+          <input type="email" name="client_email" placeholder="twoj@proton.me" required />
 
           <label class="small">Uwagi</label>
           <textarea name="notes" rows="3" placeholder="Dodatkowe informacje (termin, montaż, itp.)"></textarea>
@@ -343,11 +328,10 @@
     const formSubject = document.getElementById('formSubject');
     const form = document.getElementById('requestForm');
 
-    // Nowy, prosty model domyślny – Box.glb
-    const DEFAULT_MODEL = 'https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Box/glTF-Binary/Box.glb';
+    const DEFAULT_MODEL = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf';
 
     function loadModel(src, retries = 3) {
-      if (!src || mv.src === src) return;
+      if (mv.src === src) return;
       mv.style.opacity = '0.5';
 
       const onLoad = () => {
@@ -363,7 +347,6 @@
         } else {
           console.error('Ostateczny błąd – fallback do domyślnego');
           mv.src = DEFAULT_MODEL;
-          mv.dispatchEvent(new Event('load'));
         }
       };
 
@@ -393,8 +376,7 @@
       }
 
       const checked = optionsList.querySelectorAll('.item-check:checked');
-      const modelToLoad = checked.length > 0 ? checked[0].dataset.model : DEFAULT_MODEL;
-      loadModel(modelToLoad);
+      loadModel(checked.length > 0 ? checked[0].dataset.model : DEFAULT_MODEL);
 
       updateSummary();
       updateHighlights();
@@ -451,7 +433,7 @@
       } catch (err) {}
     });
 
-    // Inicjalizacja – ładujemy prosty model Box jako przykład
+    // Inicjalizacja
     window.addEventListener('load', () => {
       loadModel(DEFAULT_MODEL);
       updateSummary();
