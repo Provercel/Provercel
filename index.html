@@ -8,6 +8,9 @@
   <!-- Model Viewer -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
+  <!-- Preload -->
+  <link rel="preload" href="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js" as="script">
+
   <style>
     :root{
       --bg:#0b0f14;
@@ -45,6 +48,15 @@
     header h1{ margin:0; font-size:20px; letter-spacing:0.2px; }
     header p{ margin:6px 0 0 0; color:var(--muted); font-size:13px; }
 
+    .viewer-label{
+      text-align:center;
+      margin:12px 0 8px;
+      font-size:13px;
+      color:var(--muted);
+      opacity:0.9;
+      font-weight:500;
+    }
+
     .viewer-wrap{
       background:var(--glass);
       padding:14px;
@@ -57,6 +69,7 @@
       background:linear-gradient(180deg,#071018,#001018);
       box-shadow: inset 0 -20px 60px rgba(0,0,0,0.6);
       transition: opacity 0.3s ease;
+      touch-action: pan-y;
     }
 
     .controls{
@@ -161,6 +174,11 @@
       transition: transform 0.2s;
     }
     button:hover { transform: translateY(-1px); }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
     .small{ font-size:12px; color:var(--muted) }
 
     footer{ margin-top:12px; font-size:12px; color:var(--muted); }
@@ -180,9 +198,11 @@
         <p>Przeglądaj model 3D, wybierz elementy i wyślij zapytanie.</p>
       </header>
 
-      <div class="viewer-wrap" style="margin-top:12px;">
+      <div class="viewer-label" id="viewerLabel">Pełny system barier ochronnych</div>
+
+      <div class="viewer-wrap">
         <model-viewer id="mv"
-          src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf"
+          src=""
           alt="Podgląd 3D wybranego elementu bariery ochronnej"
           aria-label="Interaktywny model 3D bariery – obracaj, przybliżaj, użyj AR"
           camera-controls
@@ -193,7 +213,8 @@
           shadow-intensity="1"
           environment-image="neutral"
           camera-orbit="0deg 75deg 2.5m"
-          loading="eager">
+          loading="eager"
+          touch-action="pan-y">
 
           <button slot="ar-button" style="background:#00d1ff; color:#000; border:none; padding:10px 20px; border-radius:8px; font-weight:700; margin:12px;">
             Zobacz w AR
@@ -223,7 +244,7 @@
             </div>
             <div class="qty-wrap">
               <span class="qty-label">Ilość:</span>
-              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
+              <input type="number" class="qty" min="1" max="999" value="1" step="1" inputmode="numeric">
               <span class="qty-unit">szt.</span>
             </div>
           </label>
@@ -238,7 +259,7 @@
             </div>
             <div class="qty-wrap">
               <span class="qty-label">Ilość:</span>
-              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
+              <input type="number" class="qty" min="1" max="999" value="1" step="1" inputmode="numeric">
               <span class="qty-unit">szt.</span>
             </div>
           </label>
@@ -253,7 +274,7 @@
             </div>
             <div class="qty-wrap">
               <span class="qty-label">Ilość:</span>
-              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
+              <input type="number" class="qty" min="1" max="999" value="1" step="1" inputmode="numeric">
               <span class="qty-unit">szt.</span>
             </div>
           </label>
@@ -268,7 +289,7 @@
             </div>
             <div class="qty-wrap">
               <span class="qty-label">Ilość:</span>
-              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
+              <input type="number" class="qty" min="1" max="999" value="1" step="1" inputmode="numeric">
               <span class="qty-unit">szt.</span>
             </div>
           </label>
@@ -283,7 +304,7 @@
             </div>
             <div class="qty-wrap">
               <span class="qty-label">Ilość:</span>
-              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
+              <input type="number" class="qty" min="1" max="999" value="1" step="1" inputmode="numeric">
               <span class="qty-unit">szt.</span>
             </div>
           </label>
@@ -296,14 +317,14 @@
         <label class="section-title">Szczegóły zapytania</label>
         <form id="requestForm" action="https://formsubmit.co/provercel@proton.me" method="POST">
           <input type="text" name="_honey" style="display:none">
-          <input type="hidden" name="_next" value="https://provercel.vercel.app/">
+          <input type="hidden" name="_next" value="https://provercel.vercel.app/thanks">
           <input type="hidden" name="_subject" id="formSubject" value="Zapytanie z Provercel - 3D">
 
           <label class="small">Firma / Imię</label>
-          <input type="text" name="client_name" placeholder="Nazwa firmy lub imię" />
+          <input type="text" name="client_name" placeholder="Nazwa firmy lub imię" autocomplete="organization" />
 
           <label class="small">Adres e-mail</label>
-          <input type="email" name="client_email" placeholder="twoj@proton.me" required />
+          <input type="email" name="client_email" placeholder="twoj@proton.me" required autocomplete="email" />
 
           <label class="small">Uwagi</label>
           <textarea name="notes" rows="3" placeholder="Dodatkowe informacje (termin, montaż, itp.)"></textarea>
@@ -327,8 +348,11 @@
     const hiddenInput = document.getElementById('selected_items');
     const formSubject = document.getElementById('formSubject');
     const form = document.getElementById('requestForm');
+    const viewerLabel = document.getElementById('viewerLabel');
 
-    const DEFAULT_MODEL = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf';
+    // ZMIEŃ NA SWÓJ MODEL!
+    const EMPTY_STATE_MODEL = '/models/barrier_full.glb'; // <-- WRZUĆ SWÓJ .glb TUTAJ
+    const FALLBACK_MODEL = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf';
 
     function loadModel(src, retries = 3) {
       if (mv.src === src) return;
@@ -345,14 +369,14 @@
         if (attempt < retries) {
           setTimeout(() => loadModel(src, retries - 1), 1000 * attempt);
         } else {
-          console.error('Ostateczny błąd – fallback do domyślnego');
-          mv.src = DEFAULT_MODEL;
+          console.error('Ostateczny błąd – fallback');
+          mv.src = FALLBACK_MODEL;
+          mv.style.opacity = '1';
         }
       };
 
       mv.onload = null;
       mv.onerror = null;
-
       mv.addEventListener('load', onLoad, { once: true });
       mv.addEventListener('error', () => onError(1), { once: true });
 
@@ -366,21 +390,16 @@
       });
     }
 
-    optionsList.addEventListener('change', (e) => {
-      if (!e.target.classList.contains('item-check')) return;
-      const qtyWrap = e.target.closest('.option').querySelector('.qty-wrap');
-      qtyWrap.style.display = e.target.checked ? 'flex' : 'none';
-      if (!e.target.checked) {
-        const qtyInput = qtyWrap.querySelector('.qty');
-        qtyInput.value = 1;
-      }
-
+    function updateViewerLabel() {
       const checked = optionsList.querySelectorAll('.item-check:checked');
-      loadModel(checked.length > 0 ? checked[0].dataset.model : DEFAULT_MODEL);
-
-      updateSummary();
-      updateHighlights();
-    });
+      if (checked.length === 0) {
+        viewerLabel.textContent = 'Pełny system barier ochronnych';
+      } else if (checked.length === 1) {
+        viewerLabel.textContent = checked[0].dataset.name;
+      } else {
+        viewerLabel.textContent = `${checked.length} elementy wybrane`;
+      }
+    }
 
     function updateSummary() {
       const items = Array.from(optionsList.querySelectorAll('.option'));
@@ -402,7 +421,29 @@
       summary.textContent = selected.length ? 'Wybrane: ' + selected.join(' • ') : 'Wybrane: brak';
       hiddenInput.value = selected.length ? selected.map(s => s.replace(/ × /g, 'x')).join('; ') : '';
       formSubject.value = totalQty ? `Zapytanie z Provercel - 3D (${totalQty} szt.)` : 'Zapytanie z Provercel - 3D';
+
+      updateViewerLabel();
     }
+
+    optionsList.addEventListener('change', (e) => {
+      if (!e.target.classList.contains('item-check')) return;
+
+      const option = e.target.closest('.option');
+      const qtyWrap = option.querySelector('.qty-wrap');
+      qtyWrap.style.display = e.target.checked ? 'flex' : 'none';
+
+      if (!e.target.checked) {
+        const qtyInput = qtyWrap.querySelector('.qty');
+        qtyInput.value = 1;
+      }
+
+      const checked = optionsList.querySelectorAll('.item-check:checked');
+      const targetModel = checked.length === 0 ? EMPTY_STATE_MODEL : checked[0].dataset.model;
+
+      loadModel(targetModel);
+      updateSummary();
+      updateHighlights();
+    });
 
     document.getElementById('resetView').addEventListener('click', () => {
       mv.cameraOrbit = '0deg 75deg 2.5m';
@@ -425,17 +466,28 @@
         e.preventDefault();
         return;
       }
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn.disabled) return;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Wysyłanie...';
+
       try {
         const cam = mv.getCameraOrbit();
         const extra = `\n\n---\nWidok 3D: obrót=${cam.theta.toFixed(0)}°, nachylenie=${cam.phi.toFixed(0)}°, odległość=${cam.radius.toFixed(2)}m`;
         const notesField = form.querySelector('textarea[name="notes"]');
         notesField.value = (notesField.value.trim() + extra).trim();
       } catch (err) {}
+
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Wyślij zapytanie';
+      }, 3000);
     });
 
     // Inicjalizacja
     window.addEventListener('load', () => {
-      loadModel(DEFAULT_MODEL);
+      loadModel(EMPTY_STATE_MODEL);
       updateSummary();
       updateHighlights();
     });
