@@ -62,7 +62,7 @@
         </div>
       </div>
       <div style="margin-top:14px;display:flex;gap:10px;align-items:center;">
-        <button type="button" id="resetView" style="display:none; background: rgba(0,209,255,0.15); color: var(--accent); border: 1px solid rgba(0,209,255,0.3); padding: 6px 12px; border-radius: 6px; font-size: 12px;">Resetuj widok</button>
+        <button type="button" id="resetView" style="display:none;">Resetuj widok</button>
         <div class="small">Obracaj myszką, przybliż gestem.</div>
       </div>
     </div>
@@ -70,7 +70,7 @@
       <div class="panel">
         <label class="section-title">Wybierz elementy</label>
         <div class="options" id="optionsList">
-          <!-- PIERWSZA POZYCJA USUNIĘTA -->
+          <!-- PIERWSZA POZYCJA USUNIĘTA – TYLKO TA JEDNA -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Przęsło proste 2m" data-sku="PRZ-2000" 
                    data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF-Binary/Avocado.glb">
@@ -158,17 +158,12 @@
 
     optionsList.addEventListener('change', e => {
       if (!e.target.classList.contains('item-check')) return;
-      const option = e.target.closest('.option');
-      const qtyWrap = option.querySelector('.qty-wrap');
+      const qtyWrap = e.target.closest('.option').querySelector('.qty-wrap');
       qtyWrap.style.display = e.target.checked ? 'flex' : 'none';
       if (!e.target.checked) qtyWrap.querySelector('.qty').value = 1;
 
       const checked = optionsList.querySelectorAll('.item-check:checked');
-      if (checked.length > 0) {
-        showModel(checked[0].dataset.model);
-      } else {
-        showPlaceholder();
-      }
+      checked.length > 0 ? showModel(checked[0].dataset.model) : showPlaceholder();
       updateSummary();
     });
 
@@ -178,7 +173,7 @@
       optionsList.querySelectorAll('.option').forEach(item => {
         const check = item.querySelector('.item-check');
         const qty = item.querySelector('.qty');
-        if (check.checked && qty && qty.value >= 1) {
+        if (check.checked && qty.value >= 1) {
           const q = parseInt(qty.value);
           total += q;
           selected.push(`${check.dataset.name} × ${q}${check.dataset.sku ? ' ('+check.dataset.sku+')' : ''}`);
@@ -189,7 +184,7 @@
       formSubject.value = total ? `Zapytanie z Provercel - 3D (${total} szt.)` : 'Zapytanie z Provercel - 3D';
     }
 
-    resetBtn.onclick = () => {
+    document.getElementById('resetView').onclick = () => {
       mv.cameraOrbit = '0deg 75deg 2.5m';
       mv.jumpCameraToGoal();
     };
@@ -203,18 +198,10 @@
       }
     });
 
-    document.getElementById('requestForm').addEventListener('submit', function(e) {
-      const checked = optionsList.querySelectorAll('.item-check:checked');
-      if (checked.length === 0) {
-        e.preventDefault();
-        alert('Wybierz przynajmniej jeden element przed wysłaniem.');
-      }
-    });
-
-    window.addEventListener('load', () => {
+    window.onload = () => {
       showPlaceholder();
       updateSummary();
-    });
+    };
   </script>
 </body>
 </html>
