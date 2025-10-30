@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Provercel — Barierowe rozwiązania 3D</title>
 
-  <!-- model-viewer (Google) -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
   <style>
@@ -56,6 +55,7 @@
       border-radius:8px;
       background:linear-gradient(180deg,#071018,#001018);
       box-shadow: inset 0 -20px 60px rgba(0,0,0,0.6);
+      transition: opacity 0.3s ease;
     }
 
     .controls{
@@ -148,74 +148,74 @@
     <div>
       <header>
         <h1>Provercel — Barierowe rozwiązania 3D</h1>
-        <p>Przeglądaj model 3D, wybierz elementy barier ocynkowanych i wyślij zapytanie.</p>
+        <p>Przeglądaj model 3D, wybierz elementy i wyślij zapytanie.</p>
       </header>
 
       <div class="viewer-wrap" style="margin-top:12px;">
         <model-viewer id="mv"
-          src="https://modelviewer.dev/shared-assets/models/RobotExpressive.glb"
+          src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/FencePanel/glTF/FencePanel.gltf"
           alt="Model barier ocynkowanych"
           camera-controls
           auto-rotate
           exposure="1"
-          ar
-          shadow-intensity="0.5">
+          shadow-intensity="0.5"
+          camera-orbit="0deg 75deg 2.5m">
         </model-viewer>
       </div>
 
       <div style="margin-top:14px; display:flex; gap:10px; align-items:center;">
-        <button id="resetView">Resetuj widok</button>
-        <div class="small">Obracaj myszką lub dotykiem, przybliż gestem.</div>
+        <button type="button" id="resetView">Resetuj widok</button>
+        <div class="small">Obracaj myszką, przybliż gestem.</div>
       </div>
     </div>
 
     <aside class="controls">
       <div class="panel">
-        <label class="section-title">Wybierz elementy (barier ocynkowanych)</label>
+        <label class="section-title">Wybierz elementy</label>
         <div class="options" id="optionsList">
           <label class="option">
-            <input type="checkbox" class="item-check" data-name="Słup stalowy H=1000" data-sku="SLP-1000">
+            <input type="checkbox" class="item-check" data-name="Słup stalowy H=1000" data-sku="SLP-1000" data-model="https://cdn.cgtrader.com/items/2823457/0e1f0d8c7d/free-3d-model-fence-panel-2m.glb">
             <div style="flex:1">
               <div><strong>Słup stalowy H=1000</strong></div>
               <div class="meta">SKU: SLP-1000 • Ø fi 60</div>
             </div>
-            <input type="number" class="qty" min="1" value="1" placeholder="1">
+            <input type="number" class="qty" min="1" value="1">
           </label>
 
           <label class="option">
-            <input type="checkbox" class="item-check" data-name="Przęsło proste 2m" data-sku="PRZ-2000">
+            <input type="checkbox" class="item-check" data-name="Przęsło proste 2m" data-sku="PRZ-2000" data-model="https://cdn.cgtrader.com/items/2823457/0e1f0d8c7d/free-3d-model-fence-panel-2m.glb">
             <div style="flex:1">
               <div><strong>Przęsło proste 2m</strong></div>
               <div class="meta">SKU: PRZ-2000 • ocynk</div>
             </div>
-            <input type="number" class="qty" min="1" value="1" placeholder="1">
+            <input type="number" class="qty" min="1" value="1">
           </label>
 
           <label class="option">
-            <input type="checkbox" class="item-check" data-name="Złącze kątowe 90°" data-sku="ZLK-090">
+            <input type="checkbox" class="item-check" data-name="Złącze kątowe 90°" data-sku="ZLK-090" data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Connector/glTF/Connector.gltf">
             <div style="flex:1">
               <div><strong>Złącze kątowe 90°</strong></div>
               <div class="meta">SKU: ZLK-090 • śruby w komplecie</div>
             </div>
-            <input type="number" class="qty" min="1" value="1" placeholder="1">
+            <input type="number" class="qty" min="1" value="1">
           </label>
 
           <label class="option">
-            <input type="checkbox" class="item-check" data-name="Stopka montażowa 150mm" data-sku="STP-150">
+            <input type="checkbox" class="item-check" data-name="Stopka montażowa 150mm" data-sku="STP-150" data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/BasePlate/glTF/BasePlate.gltf">
             <div style="flex:1">
               <div><strong>Stopka montażowa 150mm</strong></div>
               <div class="meta">SKU: STP-150</div>
             </div>
-            <input type="number" class="qty" min="1" value="1" placeholder="1">
+            <input type="number" class="qty" min="1" value="1">
           </label>
 
           <label class="option">
-            <input type="checkbox" class="item-check" data-name="Osłona krawędziowa" data-sku="OSL-001">
+            <input type="checkbox" class="item-check" data-name="Osłona krawędziowa" data-sku="OSL-001" data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/EdgeGuard/glTF/EdgeGuard.gltf">
             <div style="flex:1">
               <div><strong>Osłona krawędziowa</strong></div>
               <div class="meta">SKU: OSL-001</div>
             </div>
-            <input type="number" class="qty" min="1" value="1" placeholder="1">
+            <input type="number" class="qty" min="1" value="1">
           </label>
         </div>
 
@@ -224,7 +224,6 @@
 
       <div class="panel">
         <label class="section-title">Szczegóły zapytania</label>
-
         <form id="requestForm" action="https://formsubmit.co/provercel@proton.me" method="POST">
           <input type="text" name="_honey" style="display:none">
           <input type="hidden" name="_next" value="https://vercel.app/">
@@ -233,11 +232,11 @@
           <label class="small">Firma / Imię</label>
           <input type="text" name="client_name" placeholder="Nazwa firmy lub imię" />
 
-          <label class="small">Adres e-mail (kontaktowy)</label>
+          <label class="small">Adres e-mail</label>
           <input type="email" name="client_email" placeholder="twoj@proton.me" required />
 
           <label class="small">Uwagi</label>
-          <textarea name="notes" rows="3" placeholder="Dodatkowe informacje (termin, ilość, miejsce montażu)"></textarea>
+          <textarea name="notes" rows="3" placeholder="Dodatkowe informacje"></textarea>
 
           <input type="hidden" name="selected_items" id="selected_items" value="">
 
@@ -245,35 +244,52 @@
         </form>
 
         <footer>
-          <div class="small">Wiadomości trafią na adres <strong>provercel@proton.me</strong>.</div>
+          <div class="small">Wiadomości na <strong>provercel@proton.me</strong>.</div>
         </footer>
       </div>
     </aside>
   </div>
 
   <script>
+    const mv = document.getElementById('mv');
     const optionsList = document.getElementById('optionsList');
     const summary = document.getElementById('summary');
     const hiddenInput = document.getElementById('selected_items');
     const formSubject = document.getElementById('formSubject');
     const form = document.getElementById('requestForm');
-    const mv = document.getElementById('mv');
 
-    // Pokazuj/ukrywaj pole ilości
+    const DEFAULT_MODEL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/FencePanel/glTF/FencePanel.gltf';
+
+    function loadModel(src) {
+      if (mv.src === src) return;
+      mv.style.opacity = '0.5';
+      mv.src = src;
+      mv.addEventListener('load', () => {
+        mv.style.opacity = '1';
+        mv.cameraOrbit = '0deg 75deg 2.5m';
+        mv.jumpCameraToGoal();
+      }, { once: true });
+    }
+
     optionsList.addEventListener('change', (e) => {
       if (e.target.classList.contains('item-check')) {
         const qtyInput = e.target.closest('.option').querySelector('.qty');
         qtyInput.style.display = e.target.checked ? 'block' : 'none';
         if (!e.target.checked) qtyInput.value = 1;
+
+        const checked = optionsList.querySelectorAll('.item-check:checked');
+        if (checked.length > 0) {
+          loadModel(checked[0].dataset.model);
+        } else {
+          loadModel(DEFAULT_MODEL);
+        }
+        updateSummary();
       }
-      updateSummary();
     });
 
-    // Aktualizacja podsumowania
     function updateSummary() {
       const items = Array.from(optionsList.querySelectorAll('.option'));
       const selected = [];
-
       let totalQty = 0;
 
       items.forEach(item => {
@@ -288,55 +304,44 @@
         }
       });
 
-      summary.textContent = selected.length 
-        ? 'Wybrane: ' + selected.join(' • ')
-        : 'Wybrane: brak';
-
-      hiddenInput.value = selected.length 
-        ? selected.map(s => s.replace(/ × /g, 'x')).join('; ')
-        : '';
-
-      formSubject.value = totalQty 
-        ? `Zapytanie z Provercel - 3D (${totalQty} szt.)`
-        : 'Zapytanie z Provercel - 3D';
+      summary.textContent = selected.length ? 'Wybrane: ' + selected.join(' • ') : 'Wybrane: brak';
+      hiddenInput.value = selected.length ? selected.map(s => s.replace(/ × /g, 'x')).join('; ') : '';
+      formSubject.value = totalQty ? `Zapytanie z Provercel - 3D (${totalQty} szt.)` : 'Zapytanie z Provercel - 3D';
     }
 
     updateSummary();
 
-    // Reset widoku 3D
     document.getElementById('resetView').addEventListener('click', () => {
       mv.cameraOrbit = '0deg 75deg 2.5m';
       mv.jumpCameraToGoal();
     });
 
-    // Aktualizacja przy zmianie ilości
     optionsList.addEventListener('input', (e) => {
       if (e.target.classList.contains('qty')) {
-        const val = parseInt(e.target.value);
+        let val = parseInt(e.target.value);
         if (isNaN(val) || val < 1) e.target.value = 1;
         updateSummary();
       }
     });
 
-    // Przed wysłaniem
     form.addEventListener('submit', (e) => {
       const email = form.querySelector('input[name="client_email"]').value.trim();
       if (!/^\S+@\S+\.\S+$/.test(email)) {
-        alert('Proszę podać poprawny adres e-mail.');
+        alert('Podaj poprawny e-mail.');
         e.preventDefault();
         return;
       }
-
       try {
         const cam = mv.getCameraOrbit();
-        const extra = `\n\n---\nStan widoku 3D: obrót=${cam.theta.toFixed(0)}°, nachylenie=${cam.phi.toFixed(0)}°, odległość=${cam.radius.toFixed(2)}m`;
+        const extra = `\n\n---\nWidok 3D: obrót=${cam.theta.toFixed(0)}°, nachylenie=${cam.phi.toFixed(0)}°, odległość=${cam.radius.toFixed(2)}m`;
         const notesField = form.querySelector('textarea[name="notes"]');
-        if (notesField) {
-          notesField.value = (notesField.value.trim() + extra).trim();
-        }
-      } catch (err) {
-        console.warn('Błąd kamery:', err);
-      }
+        notesField.value = (notesField.value.trim() + extra).trim();
+      } catch (err) {}
+    });
+
+    // Ładuj domyślny model
+    window.addEventListener('load', () => {
+      loadModel(DEFAULT_MODEL);
     });
   </script>
 </body>
