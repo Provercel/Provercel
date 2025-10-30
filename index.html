@@ -170,7 +170,7 @@
 
       <div class="viewer-wrap" style="margin-top:12px;">
         <model-viewer id="mv"
-          src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+          src="https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Box/glTF-Binary/Box.glb"
           alt="Stalowa bariera ocynkowana"
           camera-controls
           auto-rotate
@@ -205,7 +205,7 @@
           <!-- SŁUP -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Słup stalowy H=1000" data-sku="SLP-1000" 
-                   data-model="https://modelviewer.dev/shared-assets/models/MetalRoughSpheres.glb">
+                   data-model="https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Cylinder/glTF-Binary/Cylinder.glb">
             <div style="flex:1">
               <div><strong>Słup stalowy H=1000</strong></div>
               <div class="meta">SKU: SLP-1000 • Ø 60 mm • ocynk</div>
@@ -216,7 +216,7 @@
           <!-- PRZĘSŁO -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Przęsło proste 2m" data-sku="PRZ-2000" 
-                   data-model="https://modelviewer.dev/shared-assets/models/RobotExpressive.glb">
+                   data-model="https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Plane/glTF-Binary/Plane.glb">
             <div style="flex:1">
               <div><strong>Przęsło proste 2m</strong></div>
               <div class="meta">SKU: PRZ-2000 • siatka 50x50 • ocynk</div>
@@ -227,7 +227,7 @@
           <!-- ZŁĄCZE -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Złącze kątowe 90°" data-sku="ZLK-090" 
-                   data-model="https://modelviewer.dev/shared-assets/models/Car.glb">
+                   data-model="https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Sphere/glTF-Binary/Sphere.glb">
             <div style="flex:1">
               <div><strong>Złącze kątowe 90°</strong></div>
               <div class="meta">SKU: ZLK-090 • śruby M8 • ocynk</div>
@@ -238,7 +238,7 @@
           <!-- STOPKA -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Stopka montażowa 150mm" data-sku="STP-150" 
-                   data-model="https://modelviewer.dev/shared-assets/models/Toaster.glb">
+                   data-model="https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Helix/glTF-Binary/Helix.glb">
             <div style="flex:1">
               <div><strong>Stopka montażowa 150mm</strong></div>
               <div class="meta">SKU: STP-150 • 4 otwory • ocynk</div>
@@ -249,7 +249,7 @@
           <!-- OSŁONA -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Osłona krawędziowa" data-sku="OSL-001" 
-                   data-model="https://modelviewer.dev/shared-assets/models/Helmet.glb">
+                   data-model="https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Torus/glTF-Binary/Torus.glb">
             <div style="flex:1">
               <div><strong>Osłona krawędziowa</strong></div>
               <div class="meta">SKU: OSL-001 • guma + stal</div>
@@ -297,11 +297,22 @@
     const formSubject = document.getElementById('formSubject');
     const form = document.getElementById('requestForm');
 
-    const DEFAULT_MODEL = 'https://modelviewer.dev/shared-assets/models/Astronaut.glb';
+    const DEFAULT_MODEL = 'https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Box/glTF-Binary/Box.glb';
 
     function loadModel(src) {
       if (mv.src === src) return;
       mv.style.opacity = '0.5';
+      
+      // Obsługa błędów ładowania
+      const errorHandler = () => {
+        console.warn('Błąd ładowania modelu:', src);
+        mv.src = DEFAULT_MODEL; // Fallback do default
+        setTimeout(() => loadModel(DEFAULT_MODEL), 100); // Ponowne ładowanie
+      };
+      
+      mv.removeEventListener('error', errorHandler); // Usuń poprzedni listener
+      mv.addEventListener('error', errorHandler, { once: true });
+      
       mv.src = src;
       mv.addEventListener('load', () => {
         mv.style.opacity = '1';
