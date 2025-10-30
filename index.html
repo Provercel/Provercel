@@ -86,6 +86,8 @@
       padding-right:6px;
       scrollbar-gutter: stable;
     }
+
+    /* === ANIMOWANA OPCJA === */
     .option{
       display:flex;
       align-items:center;
@@ -93,10 +95,11 @@
       background:linear-gradient(90deg, rgba(0,0,0,0.15), rgba(255,255,255,0.01));
       padding:8px;
       border-radius:8px;
-      transition: all 0.3s ease;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
       border: 1px solid rgba(255,255,255,0.05);
+      cursor: pointer;
     }
     .option::before {
       content: '';
@@ -104,23 +107,61 @@
       top: 0; left: 0; right: 0; bottom: 0;
       background: linear-gradient(90deg, rgba(0,209,255,0.12), rgba(0,180,255,0.06));
       opacity: 0;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.35s ease;
       pointer-events: none;
       border-radius: 8px;
+    }
+    .option:hover:not(.selected) {
+      border-color: rgba(255,255,255,0.12);
+      background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      transform: translateY(-1px);
     }
     .option.selected {
       border: 1px solid rgba(0,209,255,0.5) !important;
       box-shadow: 0 0 14px rgba(0,209,255,0.25);
+      transform: translateY(-1px);
     }
     .option.selected::before { opacity: 1; }
-    .option input[type="checkbox"]{ width:18px; height:18px; accent-color: var(--accent); }
+
+    /* Checkbox animowany */
+    .option input[type="checkbox"]{
+      width:18px; height:18px;
+      accent-color: var(--accent);
+      cursor: pointer;
+      transform: scale(1);
+      transition: transform 0.25s ease;
+    }
+    .option.selected input[type="checkbox"] {
+      transform: scale(1.12);
+    }
+
     .option .meta{font-size:13px; color:var(--muted)}
+
+    /* === ANIMOWANY QTY-WRAP (wysuwanie z prawej) === */
     .qty-wrap {
-      display: none;
+      display: flex;
       align-items: center;
       gap: 6px;
       margin-left: auto;
+      opacity: 0;
+      visibility: hidden;
+      width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      transform: translateX(20px);
+      transition: 
+        opacity 0.35s ease,
+        width 0.35s ease,
+        transform 0.35s cubic-bezier(0.2, 0, 0, 1),
+        visibility 0.35s;
     }
+    .qty-wrap.active {
+      opacity: 1;
+      visibility: visible;
+      width: auto;
+      transform: translateX(0);
+    }
+
     .qty-label, .qty-unit {
       font-size: 12px;
       color: #9aa6b2;
@@ -169,6 +210,7 @@
       .card{ grid-template-columns: 1fr; padding:14px; }
       model-viewer{ height:400px; }
       .qty-wrap { margin-left: 0; margin-top: 6px; width: 100%; justify-content: flex-end; }
+      .qty-wrap.active { width: 100%; }
     }
   </style>
 </head>
@@ -329,7 +371,7 @@
     const form = document.getElementById('requestForm');
 
     const DEFAULT_MODEL = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf';
-    let lastClickedModel = DEFAULT_MODEL; // śledzi ostatni kliknięty model
+    let lastClickedModel = DEFAULT_MODEL;
 
     function loadModel(src, retries = 3) {
       if (mv.src === src) return;
@@ -368,7 +410,6 @@
       });
     }
 
-    // Główna logika: kliknięcie = ostatni kliknięty
     optionsList.addEventListener('click', (e) => {
       const checkbox = e.target.closest('.item-check');
       if (!checkbox) return;
@@ -376,7 +417,6 @@
       const option = checkbox.closest('.option');
       const qtyWrap = option.querySelector('.qty-wrap');
 
-      // Przełączanie checkboxa (jeśli kliknięto w label)
       if (!e.target.matches('input')) {
         checkbox.checked = !checkbox.checked;
         e.preventDefault();
@@ -384,7 +424,9 @@
 
       lastClickedModel = checkbox.dataset.model;
 
-      qtyWrap.style.display = checkbox.checked ? 'flex' : 'none';
+      // ANIMACJA: używamy klasy .active zamiast display
+      qtyWrap.classList.toggle('active', checkbox.checked);
+
       if (!checkbox.checked) {
         const qtyInput = qtyWrap.querySelector('.qty');
         qtyInput.value = 1;
@@ -398,7 +440,6 @@
       } else if (checkbox.checked) {
         loadModel(lastClickedModel);
       } else {
-        // Odznaczono ostatni kliknięty → przejdź na pierwszy zaznaczony
         if (mv.src === lastClickedModel) {
           loadModel(checked[0].dataset.model);
           lastClickedModel = checked[0].dataset.model;
