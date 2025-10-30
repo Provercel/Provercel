@@ -49,6 +49,8 @@
       background:var(--glass);
       padding:14px;
       border-radius:10px;
+      position: relative;
+      overflow: hidden;
     }
     model-viewer{
       width:100%;
@@ -56,7 +58,41 @@
       border-radius:8px;
       background:linear-gradient(180deg,#071018,#001018);
       box-shadow: inset 0 -20px 60px rgba(0,0,0,0.6);
-      transition: opacity 0.3s ease;
+      transition: opacity 0.4s ease;
+      opacity: 1;
+    }
+    model-viewer.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Placeholder */
+    .placeholder {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #0a1118, #050d14);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 15px;
+      text-align: center;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+    .placeholder.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .placeholder svg {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 12px;
+      opacity: 0.4;
     }
 
     .controls{
@@ -182,7 +218,7 @@
 
       <div class="viewer-wrap" style="margin-top:12px;">
         <model-viewer id="mv"
-          src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf"
+          src=""
           alt="Podgląd 3D wybranego elementu bariery ochronnej"
           aria-label="Interaktywny model 3D bariery – obracaj, przybliżaj, użyj AR"
           camera-controls
@@ -193,7 +229,8 @@
           shadow-intensity="1"
           environment-image="neutral"
           camera-orbit="0deg 75deg 2.5m"
-          loading="eager">
+          loading="eager"
+          class="hidden">
 
           <button slot="ar-button" style="background:#00d1ff; color:#000; border:none; padding:10px 20px; border-radius:8px; font-weight:700; margin:12px;">
             Zobacz w AR
@@ -201,10 +238,20 @@
 
           <div slot="progress-bar" style="background:#333; height:4px; border-radius:2px;"></div>
         </model-viewer>
+
+        <!-- Placeholder -->
+        <div class="placeholder visible" id="placeholder">
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <rect x="12" y="12" width="40" height="40" rx="4"/>
+            <path d="M12 28h40M28 12v40"/>
+          </svg>
+          <div>Wybierz element z listy</div>
+          <div style="font-size:12px; margin-top:4px; opacity:0.7;">Zaznacz checkbox, aby zobaczyć model 3D</div>
+        </div>
       </div>
 
       <div style="margin-top:14px; display:flex; gap:10px; align-items:center;">
-        <button type="button" id="resetView">Resetuj widok</button>
+        <button type="button" id="resetView" style="display:none;">Resetuj widok</button>
         <div class="small">Obracaj myszką, przybliż gestem.</div>
       </div>
     </div>
@@ -322,13 +369,27 @@
 
   <script>
     const mv = document.getElementById('mv');
+    const placeholder = document.getElementById('placeholder');
+    const resetBtn = document.getElementById('resetView');
     const optionsList = document.getElementById('optionsList');
     const summary = document.getElementById('summary');
     const hiddenInput = document.getElementById('selected_items');
     const formSubject = document.getElementById('formSubject');
     const form = document.getElementById('requestForm');
 
-    const DEFAULT_MODEL = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf';
+    function showPlaceholder() {
+      mv.classList.add('hidden');
+      placeholder.classList.add('visible');
+      resetBtn.style.display = 'none';
+      mv.src = ''; // Czyści model
+    }
+
+    function showModel(src) {
+      mv.classList.remove('hidden');
+      placeholder.classList.remove('visible');
+      resetBtn.style.display = 'block';
+      loadModel(src);
+    }
 
     function loadModel(src, retries = 3) {
       if (mv.src === src) return;
@@ -345,8 +406,7 @@
         if (attempt < retries) {
           setTimeout(() => loadModel(src, retries - 1), 1000 * attempt);
         } else {
-          console.error('Ostateczny błąd – fallback do domyślnego');
-          mv.src = DEFAULT_MODEL;
+          showPlaceholder();
         }
       };
 
@@ -376,7 +436,11 @@
       }
 
       const checked = optionsList.querySelectorAll('.item-check:checked');
-      loadModel(checked.length > 0 ? checked[0].dataset.model : DEFAULT_MODEL);
+      if (checked.length > 0) {
+        showModel(checked[0].dataset.model);
+      } else {
+        showPlaceholder();
+      }
 
       updateSummary();
       updateHighlights();
@@ -435,7 +499,7 @@
 
     // Inicjalizacja
     window.addEventListener('load', () => {
-      loadModel(DEFAULT_MODEL);
+      showPlaceholder();
       updateSummary();
       updateHighlights();
     });
