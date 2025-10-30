@@ -62,7 +62,7 @@
         </div>
       </div>
       <div style="margin-top:14px;display:flex;gap:10px;align-items:center;">
-        <button type="button" id="resetView" style="display:none;">Resetuj widok</button>
+        <button type="button" id="resetView" style="display:none; background: rgba(0,209,255,0.15); color: var(--accent); border: 1px solid rgba(0,209,255,0.3); padding: 6px 12px; border-radius: 6px; font-size: 12px;">Resetuj widok</button>
         <div class="small">Obracaj myszką, przybliż gestem.</div>
       </div>
     </div>
@@ -143,7 +143,7 @@
       mv.classList.add('hidden');
       placeholder.classList.add('visible');
       resetBtn.style.display = 'none';
-      mv.removeAttribute('src');
+      mv.src = '';
     }
 
     function showModel(src) {
@@ -151,24 +151,37 @@
       placeholder.classList.remove('visible');
       resetBtn.style.display = 'block';
       mv.style.opacity = '0.5';
-      mv.removeAttribute('src');
-      mv.src = src + '?t=' + Date.now(); // zapobiega cache
 
-      mv.addEventListener('load', () => {
-        mv.style.opacity = '1';
-        mv.cameraOrbit = '0deg 75deg 2.5m';
-        mv.jumpCameraToGoal();
-      }, { once: true });
+      // Kluczowy fix: wymuszenie przeładowania
+      mv.src = '';
+      requestAnimationFrame(() => {
+        mv.src = src;
+        mv.dismissPoster(); // usuwa poster (jeśli jest)
+
+        const onLoad = () => {
+          mv.style.opacity = '1';
+          mv.cameraOrbit = '0deg 75deg 2.5m';
+          mv.jumpCameraToGoal();
+          mv.removeEventListener('load', onLoad);
+        };
+
+        mv.addEventListener('load', onLoad);
+      });
     }
 
     optionsList.addEventListener('change', e => {
       if (!e.target.classList.contains('item-check')) return;
-      const qtyWrap = e.target.closest('.option').querySelector('.qty-wrap');
+      const option = e.target.closest('.option');
+      const qtyWrap = option.querySelector('.qty-wrap');
       qtyWrap.style.display = e.target.checked ? 'flex' : 'none';
       if (!e.target.checked) qtyWrap.querySelector('.qty').value = 1;
 
       const checked = optionsList.querySelectorAll('.item-check:checked');
-      checked.length > 0 ? showModel(checked[0].dataset.model) : showPlaceholder();
+      if (checked.length > 0) {
+        showModel(checked[0].dataset.model);
+      } else {
+        showPlaceholder();
+      }
       updateSummary();
     });
 
@@ -178,7 +191,7 @@
       optionsList.querySelectorAll('.option').forEach(item => {
         const check = item.querySelector('.item-check');
         const qty = item.querySelector('.qty');
-        if (check.checked && qty.value >= 1) {
+        if (check.checked && qty && qty.value >= 1) {
           const q = parseInt(qty.value);
           total += q;
           selected.push(`${check.dataset.name} × ${q}${check.dataset.sku ? ' ('+check.dataset.sku+')' : ''}`);
@@ -189,7 +202,7 @@
       formSubject.value = total ? `Zapytanie z Provercel - 3D (${total} szt.)` : 'Zapytanie z Provercel - 3D';
     }
 
-    document.getElementById('resetView').onclick = () => {
+    resetBtn.onclick = () => {
       mv.cameraOrbit = '0deg 75deg 2.5m';
       mv.jumpCameraToGoal();
     };
@@ -203,10 +216,20 @@
       }
     });
 
-    window.onload = () => {
+    // Walidacja przed wysłaniem
+    document.getElementById('requestForm').addEventListener('submit', function(e) {
+      const checked = optionsList.querySelectorAll('.item-check:checked');
+      if (checked.length === 0) {
+        e.preventDefault();
+        alert('Wybierz przynajmniej jeden element przed wysłaniem.');
+      }
+    });
+
+    // Inicjalizacja
+    window.addEventListener('load', () => {
       showPlaceholder();
       updateSummary();
-    };
+    });
   </script>
 </body>
 </html>
