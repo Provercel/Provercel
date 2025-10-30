@@ -329,6 +329,7 @@
     const form = document.getElementById('requestForm');
 
     const DEFAULT_MODEL = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf';
+    let lastClickedModel = DEFAULT_MODEL; // śledzi ostatni kliknięty model
 
     function loadModel(src, retries = 3) {
       if (mv.src === src) return;
@@ -347,6 +348,7 @@
         } else {
           console.error('Ostateczny błąd – fallback do domyślnego');
           mv.src = DEFAULT_MODEL;
+          lastClickedModel = DEFAULT_MODEL;
         }
       };
 
@@ -366,17 +368,42 @@
       });
     }
 
-    optionsList.addEventListener('change', (e) => {
-      if (!e.target.classList.contains('item-check')) return;
-      const qtyWrap = e.target.closest('.option').querySelector('.qty-wrap');
-      qtyWrap.style.display = e.target.checked ? 'flex' : 'none';
-      if (!e.target.checked) {
+    // Główna logika: kliknięcie = ostatni kliknięty
+    optionsList.addEventListener('click', (e) => {
+      const checkbox = e.target.closest('.item-check');
+      if (!checkbox) return;
+
+      const option = checkbox.closest('.option');
+      const qtyWrap = option.querySelector('.qty-wrap');
+
+      // Przełączanie checkboxa (jeśli kliknięto w label)
+      if (!e.target.matches('input')) {
+        checkbox.checked = !checkbox.checked;
+        e.preventDefault();
+      }
+
+      lastClickedModel = checkbox.dataset.model;
+
+      qtyWrap.style.display = checkbox.checked ? 'flex' : 'none';
+      if (!checkbox.checked) {
         const qtyInput = qtyWrap.querySelector('.qty');
         qtyInput.value = 1;
       }
 
       const checked = optionsList.querySelectorAll('.item-check:checked');
-      loadModel(checked.length > 0 ? checked[0].dataset.model : DEFAULT_MODEL);
+
+      if (checked.length === 0) {
+        loadModel(DEFAULT_MODEL);
+        lastClickedModel = DEFAULT_MODEL;
+      } else if (checkbox.checked) {
+        loadModel(lastClickedModel);
+      } else {
+        // Odznaczono ostatni kliknięty → przejdź na pierwszy zaznaczony
+        if (mv.src === lastClickedModel) {
+          loadModel(checked[0].dataset.model);
+          lastClickedModel = checked[0].dataset.model;
+        }
+      }
 
       updateSummary();
       updateHighlights();
