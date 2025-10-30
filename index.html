@@ -70,19 +70,7 @@
       <div class="panel">
         <label class="section-title">Wybierz elementy</label>
         <div class="options" id="optionsList">
-          <label class="option">
-            <input type="checkbox" class="item-check" data-name="Słup stalowy H=1000" data-sku="SLP-1000" 
-                   data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/FlightHelmet/glTF-Binary/FlightHelmet.glb">
-            <div style="flex:1">
-              <div><strong>Słup stalowy H=1000</strong></div>
-              <div class="meta">SKU: SLP-1000 • Ø 60 mm • ocynk</div>
-            </div>
-            <div class="qty-wrap">
-              <span class="qty-label">Ilość:</span>
-              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
-              <span class="qty-unit">szt.</span>
-            </div>
-          </label>
+          <!-- PIERWSZA POZYCJA USUNIĘTA -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Przęsło proste 2m" data-sku="PRZ-2000" 
                    data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF-Binary/Avocado.glb">
@@ -152,11 +140,10 @@
       resetBtn.style.display = 'block';
       mv.style.opacity = '0.5';
 
-      // Kluczowy fix: wymuszenie przeładowania
       mv.src = '';
       requestAnimationFrame(() => {
         mv.src = src;
-        mv.dismissPoster(); // usuwa poster (jeśli jest)
+        mv.dismissPoster();
 
         const onLoad = () => {
           mv.style.opacity = '1';
@@ -216,7 +203,6 @@
       }
     });
 
-    // Walidacja przed wysłaniem
     document.getElementById('requestForm').addEventListener('submit', function(e) {
       const checked = optionsList.querySelectorAll('.item-check:checked');
       if (checked.length === 0) {
@@ -225,7 +211,6 @@
       }
     });
 
-    // Inicjalizacja
     window.addEventListener('load', () => {
       showPlaceholder();
       updateSummary();
