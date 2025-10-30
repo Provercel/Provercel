@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Provercel — Barierowe rozwiązania 3D</title>
 
-
   <!-- model-viewer (Google) -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-
 
   <style>
     :root{
@@ -47,7 +45,6 @@
     header h1{ margin:0; font-size:20px; letter-spacing:0.2px; }
     header p{ margin:6px 0 0 0; color:var(--muted); font-size:13px; }
 
-
     .viewer-wrap{
       background:var(--glass);
       padding:14px;
@@ -60,7 +57,6 @@
       background:linear-gradient(180deg,#071018,#001018);
       box-shadow: inset 0 -20px 60px rgba(0,0,0,0.6);
     }
-
 
     .controls{
       display:flex;
@@ -98,13 +94,24 @@
     }
     .option input[type="checkbox"]{width:18px; height:18px;}
     .option .meta{font-size:13px; color:var(--muted)}
+    .option .qty{
+      width:50px;
+      padding:4px 6px;
+      font-size:13px;
+      border-radius:6px;
+      border:1px solid rgba(255,255,255,0.1);
+      background:rgba(0,0,0,0.3);
+      color:#fff;
+      text-align:center;
+      display:none;
+    }
+
     .summary{
       font-size:13px;
       color:var(--muted);
       margin-top:8px;
       min-height:36px;
     }
-
 
     form{display:flex; flex-direction:column; gap:10px}
     input[type="text"], input[type="email"], textarea, select{
@@ -128,9 +135,7 @@
     }
     .small{ font-size:12px; color:var(--muted) }
 
-
     footer{ margin-top:12px; font-size:12px; color:var(--muted); }
-
 
     @media (max-width:980px){
       .card{ grid-template-columns: 1fr; padding:14px; }
@@ -146,7 +151,6 @@
         <p>Przeglądaj model 3D, wybierz elementy barier ocynkowanych i wyślij zapytanie.</p>
       </header>
 
-
       <div class="viewer-wrap" style="margin-top:12px;">
         <model-viewer id="mv"
           src="https://modelviewer.dev/shared-assets/models/RobotExpressive.glb"
@@ -159,103 +163,181 @@
         </model-viewer>
       </div>
 
-
       <div style="margin-top:14px; display:flex; gap:10px; align-items:center;">
         <button id="resetView">Resetuj widok</button>
         <div class="small">Obracaj myszką lub dotykiem, przybliż gestem.</div>
       </div>
     </div>
 
-
     <aside class="controls">
       <div class="panel">
         <label class="section-title">Wybierz elementy (barier ocynkowanych)</label>
         <div class="options" id="optionsList">
-          <label class="option"><input type="checkbox" value="Słup stalowy H=1000" data-sku="SLP-1000"><div><div><strong>Słup stalowy H=1000</strong></div><div class="meta">SKU: SLP-1000 • Ø fi 60</div></div></label>
-          <label class="option"><input type="checkbox" value="Przęsło proste 2m" data-sku="PRZ-2000"><div><div><strong>Przęsło proste 2m</strong></div><div class="meta">SKU: PRZ-2000 • ocynk</div></div></label>
-          <label class="option"><input type="checkbox" value="Złącze kątowe 90°" data-sku="ZLK-090"><div><div><strong>Złącze kątowe 90°</strong></div><div class="meta">SKU: ZLK-090 • śruby w komplecie</div></div></label>
-          <label class="option"><input type="checkbox" value="Stopka montażowa 150mm" data-sku="STP-150"><div><div><strong>Stopka montażowa 150mm</strong></div><div class="meta">SKU: STP-150</div></div></label>
-          <label class="option"><input type="checkbox" value="Osłona krawędziowa" data-sku="OSL-001"><div><div><strong>Osłona krawędziowa</strong></div><div class="meta">SKU: OSL-001</div></div></label>
-        </div>
+          <label class="option">
+            <input type="checkbox" class="item-check" data-name="Słup stalowy H=1000" data-sku="SLP-1000">
+            <div style="flex:1">
+              <div><strong>Słup stalowy H=1000</strong></div>
+              <div class="meta">SKU: SLP-1000 • Ø fi 60</div>
+            </div>
+            <input type="number" class="qty" min="1" value="1" placeholder="1">
+          </label>
 
+          <label class="option">
+            <input type="checkbox" class="item-check" data-name="Przęsło proste 2m" data-sku="PRZ-2000">
+            <div style="flex:1">
+              <div><strong>Przęsło proste 2m</strong></div>
+              <div class="meta">SKU: PRZ-2000 • ocynk</div>
+            </div>
+            <input type="number" class="qty" min="1" value="1" placeholder="1">
+          </label>
+
+          <label class="option">
+            <input type="checkbox" class="item-check" data-name="Złącze kątowe 90°" data-sku="ZLK-090">
+            <div style="flex:1">
+              <div><strong>Złącze kątowe 90°</strong></div>
+              <div class="meta">SKU: ZLK-090 • śruby w komplecie</div>
+            </div>
+            <input type="number" class="qty" min="1" value="1" placeholder="1">
+          </label>
+
+          <label class="option">
+            <input type="checkbox" class="item-check" data-name="Stopka montażowa 150mm" data-sku="STP-150">
+            <div style="flex:1">
+              <div><strong>Stopka montażowa 150mm</strong></div>
+              <div class="meta">SKU: STP-150</div>
+            </div>
+            <input type="number" class="qty" min="1" value="1" placeholder="1">
+          </label>
+
+          <label class="option">
+            <input type="checkbox" class="item-check" data-name="Osłona krawędziowa" data-sku="OSL-001">
+            <div style="flex:1">
+              <div><strong>Osłona krawędziowa</strong></div>
+              <div class="meta">SKU: OSL-001</div>
+            </div>
+            <input type="number" class="qty" min="1" value="1" placeholder="1">
+          </label>
+        </div>
 
         <div class="summary" id="summary">Wybrane: brak</div>
       </div>
 
-
       <div class="panel">
         <label class="section-title">Szczegóły zapytania</label>
-
 
         <form id="requestForm" action="https://formsubmit.co/provercel@proton.me" method="POST">
           <input type="text" name="_honey" style="display:none">
           <input type="hidden" name="_next" value="https://vercel.app/">
           <input type="hidden" name="_subject" id="formSubject" value="Zapytanie z Provercel - 3D">
 
-
           <label class="small">Firma / Imię</label>
           <input type="text" name="client_name" placeholder="Nazwa firmy lub imię" />
-
 
           <label class="small">Adres e-mail (kontaktowy)</label>
           <input type="email" name="client_email" placeholder="twoj@proton.me" required />
 
-
           <label class="small">Uwagi</label>
-          <textarea name="notes" rows="3" placeholder="Dodatkowe informacje (termin, ilość, miejsce monta\u017c)"></textarea>
-
+          <textarea name="notes" rows="3" placeholder="Dodatkowe informacje (termin, ilość, miejsce montażu)"></textarea>
 
           <input type="hidden" name="selected_items" id="selected_items" value="">
 
-
           <button type="submit">Wyślij zapytanie</button>
         </form>
-
 
         <footer>
           <div class="small">Wiadomości trafią na adres <strong>provercel@proton.me</strong>.</div>
         </footer>
       </div>
-
-
     </aside>
   </div>
-
 
   <script>
     const optionsList = document.getElementById('optionsList');
     const summary = document.getElementById('summary');
     const hiddenInput = document.getElementById('selected_items');
+    const formSubject = document.getElementById('formSubject');
     const form = document.getElementById('requestForm');
     const mv = document.getElementById('mv');
 
+    // Pokazuj/ukrywaj pole ilości
+    optionsList.addEventListener('change', (e) => {
+      if (e.target.classList.contains('item-check')) {
+        const qtyInput = e.target.closest('.option').querySelector('.qty');
+        qtyInput.style.display = e.target.checked ? 'block' : 'none';
+        if (!e.target.checked) qtyInput.value = 1;
+      }
+      updateSummary();
+    });
 
-    function updateSummary(){
-      const checks = Array.from(optionsList.querySelectorAll('input[type="checkbox"]'));
-      const selected = checks.filter(c => c.checked).map(c => {
-        const sku = c.getAttribute('data-sku') || '';
-        return `${c.value}${sku ? ' ('+sku+')' : ''}`;
+    // Aktualizacja podsumowania
+    function updateSummary() {
+      const items = Array.from(optionsList.querySelectorAll('.option'));
+      const selected = [];
+
+      let totalQty = 0;
+
+      items.forEach(item => {
+        const check = item.querySelector('.item-check');
+        const qtyInput = item.querySelector('.qty');
+        if (check.checked && qtyInput.value >= 1) {
+          const name = check.dataset.name;
+          const sku = check.dataset.sku;
+          const qty = parseInt(qtyInput.value);
+          totalQty += qty;
+          selected.push(`${name} × ${qty}${sku ? ' (' + sku + ')' : ''}`);
+        }
       });
-      summary.textContent = selected.length ? ('Wybrane: ' + selected.join(', ')) : 'Wybrane: brak';
-      hiddenInput.value = selected.join('; ');
+
+      summary.textContent = selected.length 
+        ? 'Wybrane: ' + selected.join(' • ')
+        : 'Wybrane: brak';
+
+      hiddenInput.value = selected.length 
+        ? selected.map(s => s.replace(/ × /g, 'x')).join('; ')
+        : '';
+
+      formSubject.value = totalQty 
+        ? `Zapytanie z Provercel - 3D (${totalQty} szt.)`
+        : 'Zapytanie z Provercel - 3D';
     }
 
-
-    optionsList.addEventListener('change', updateSummary);
     updateSummary();
 
-
+    // Reset widoku 3D
     document.getElementById('resetView').addEventListener('click', () => {
       mv.cameraOrbit = '0deg 75deg 2.5m';
       mv.jumpCameraToGoal();
     });
 
+    // Aktualizacja przy zmianie ilości
+    optionsList.addEventListener('input', (e) => {
+      if (e.target.classList.contains('qty')) {
+        const val = parseInt(e.target.value);
+        if (isNaN(val) || val < 1) e.target.value = 1;
+        updateSummary();
+      }
+    });
 
+    // Przed wysłaniem
     form.addEventListener('submit', (e) => {
-      try{
-        const cam = mv.getCameraOrbit();
-        const extra = `\n\n---\nStan widoku: orbit=${cam.theta.toFixed(2)},${cam.phi.toFixed(2)},${cam.radius.toFixed(2)}`;
-        const notesField = form.querySelector('textarea[name="notes"]');
-        if(notesField){
+      const email = form.querySelector('input[name="client_email"]').value.trim();
+      if (!/^\S+@\S+\.\S+$/.test(email)) {
+        alert('Proszę podać poprawny adres e-mail.');
+        e.preventDefault();
+        return;
+      }
 
-          notesField.value
+      try {
+        const cam = mv.getCameraOrbit();
+        const extra = `\n\n---\nStan widoku 3D: obrót=${cam.theta.toFixed(0)}°, nachylenie=${cam.phi.toFixed(0)}°, odległość=${cam.radius.toFixed(2)}m`;
+        const notesField = form.querySelector('textarea[name="notes"]');
+        if (notesField) {
+          notesField.value = (notesField.value.trim() + extra).trim();
+        }
+      } catch (err) {
+        console.warn('Błąd kamery:', err);
+      }
+    });
+  </script>
+</body>
+</html>
