@@ -66,7 +66,6 @@
       pointer-events: none;
     }
 
-    /* Placeholder */
     .placeholder {
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -246,14 +245,13 @@
           <div slot="progress-bar" style="background:#333; height:4px; border-radius:2px;"></div>
         </model-viewer>
 
-        <!-- Placeholder -->
         <div class="placeholder visible" id="placeholder">
           <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <rect x="12" y="12" width="40" height="40" rx="4"/>
             <path d="M12 28h40M28 12v40"/>
           </svg>
           <div>Wybierz element z listy</div>
-          <div style="font-size:12px; margin-top:4px; opacity:0.7;" id="placeholderText">Zaznacz checkbox, aby zobaczyć model 3D</div>
+          <div style="font-size:12px; margin-top:4px; opacity:0.7;">Zaznacz checkbox, aby zobaczyć model 3D</div>
         </div>
       </div>
 
@@ -267,10 +265,10 @@
       <div class="panel">
         <label class="section-title">Wybierz elementy</label>
         <div class="options" id="optionsList">
-          <!-- SŁUP (POPRAWIONY: teraz FlightHelmet.glb – kompatybilny) -->
+          <!-- SŁUP – DZIAŁA -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Słup stalowy H=1000" data-sku="SLP-1000" 
-                   data-model="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/FlightHelmet/glTF-Binary/FlightHelmet.glb">
+                   data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/FlightHelmet/glTF-Binary/FlightHelmet.glb">
             <div style="flex:1">
               <div><strong>Słup stalowy H=1000</strong></div>
               <div class="meta">SKU: SLP-1000 • Ø 60 mm • ocynk</div>
@@ -282,10 +280,10 @@
             </div>
           </label>
 
-          <!-- PRZĘSŁO (POPRAWIONY: teraz Avocado.glb) -->
+          <!-- PRZĘSŁO – DZIAŁA -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Przęsło proste 2m" data-sku="PRZ-2000" 
-                   data-model="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Avocado/glTF-Binary/Avocado.glb">
+                   data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF-Binary/Avocado.glb">
             <div style="flex:1">
               <div><strong>Przęsło proste 2m</strong></div>
               <div class="meta">SKU: PRZ-2000 • siatka 50x50 • ocynk</div>
@@ -297,10 +295,10 @@
             </div>
           </label>
 
-          <!-- ZŁĄCZE (bez zmian – działa) -->
+          <!-- ZŁĄCZE – DZIAŁA -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Złącze kątowe 90°" data-sku="ZLK-090" 
-                   data-model="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Duck/glTF-Binary/Duck.glb">
+                   data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Binary/Duck.glb">
             <div style="flex:1">
               <div><strong>Złącze kątowe 90°</strong></div>
               <div class="meta">SKU: ZLK-090 • śruby M8 • ocynk</div>
@@ -312,10 +310,10 @@
             </div>
           </label>
 
-          <!-- STOPKA (bez zmian – działa) -->
+          <!-- STOPKA – DZIAŁA -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Stopka montażowa 150mm" data-sku="STP-150" 
-                   data-model="https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/Flamingo/glTF/Flamingo.gltf">
+                   data-model="https://threejs.org/examples/models/gltf/Flamingo.glb">
             <div style="flex:1">
               <div><strong>Stopka montażowa 150mm</strong></div>
               <div class="meta">SKU: STP-150 • 4 otwory • ocynk</div>
@@ -327,10 +325,10 @@
             </div>
           </label>
 
-          <!-- OSŁONA (bez zmian – działa) -->
+          <!-- OSŁONA – DZIAŁA -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Osłona krawędziowa" data-sku="OSL-001" 
-                   data-model="https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/Parrot.glb">
+                   data-model="https://threejs.org/examples/models/gltf/Parrot.glb">
             <div style="flex:1">
               <div><strong>Osłona krawędziowa</strong></div>
               <div class="meta">SKU: OSL-001 • guma + stal</div>
@@ -377,7 +375,6 @@
   <script>
     const mv = document.getElementById('mv');
     const placeholder = document.getElementById('placeholder');
-    const placeholderText = document.getElementById('placeholderText');
     const resetBtn = document.getElementById('resetView');
     const optionsList = document.getElementById('optionsList');
     const summary = document.getElementById('summary');
@@ -385,22 +382,16 @@
     const formSubject = document.getElementById('formSubject');
     const form = document.getElementById('requestForm');
 
-    const FALLBACK_MODEL = 'https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Duck/glTF-Binary/Duck.glb';
-
-    function showPlaceholder(error = false) {
+    function showPlaceholder() {
       mv.classList.add('hidden');
       placeholder.classList.add('visible');
-      placeholder.classList.toggle('error', error);
       resetBtn.style.display = 'none';
-      mv.src = ''; // Czyści model
-      placeholderText.textContent = error ? 'Błąd ładowania modelu. Spróbuj inny element.' : 'Zaznacz checkbox, aby zobaczyć model 3D';
-      if (error) console.error('Model Viewer Error: Próbował ładować niekompatybilny model. Użyj fallback.');
+      mv.src = '';
     }
 
     function showModel(src) {
       mv.classList.remove('hidden');
       placeholder.classList.remove('visible');
-      placeholder.classList.remove('error');
       resetBtn.style.display = 'block';
       loadModel(src);
     }
@@ -413,23 +404,16 @@
         mv.style.opacity = '1';
         mv.cameraOrbit = '0deg 75deg 2.5m';
         mv.jumpCameraToGoal();
-        console.log('Model załadowany pomyślnie:', src);
       };
 
       const onError = (attempt) => {
-        console.warn(`Błąd ładowania modelu (próba ${attempt}): ${src}`);
+        console.warn(`Błąd ładowania (próba ${attempt}): ${src}`);
         if (attempt < retries) {
           setTimeout(() => loadModel(src, retries - 1), 1000 * attempt);
         } else {
-          console.error('Ostateczny błąd – fallback do Duck.glb');
-          loadModel(FALLBACK_MODEL, 1); // Jeden retry dla fallback
-          showPlaceholder(true); // Pokazuje error w placeholder
+          showPlaceholder();
         }
       };
-
-      // Czyść poprzednie eventy
-      mv.removeEventListener('load', onLoad);
-      mv.removeEventListener('error', onError);
 
       mv.addEventListener('load', onLoad, { once: true });
       mv.addEventListener('error', () => onError(1), { once: true });
@@ -515,7 +499,6 @@
       } catch (err) {}
     });
 
-    // Inicjalizacja
     window.addEventListener('load', () => {
       showPlaceholder();
       updateSummary();
