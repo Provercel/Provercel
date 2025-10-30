@@ -70,7 +70,19 @@
       <div class="panel">
         <label class="section-title">Wybierz elementy</label>
         <div class="options" id="optionsList">
-          <!-- PIERWSZA POZYCJA USUNIĘTA – TYLKO TA JEDNA -->
+          <label class="option">
+            <input type="checkbox" class="item-check" data-name="Słup stalowy H=1000" data-sku="SLP-1000" 
+                   data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/FlightHelmet/glTF-Binary/FlightHelmet.glb">
+            <div style="flex:1">
+              <div><strong>Słup stalowy H=1000</strong></div>
+              <div class="meta">SKU: SLP-1000 • Ø 60 mm • ocynk</div>
+            </div>
+            <div class="qty-wrap">
+              <span class="qty-label">Ilość:</span>
+              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
+              <span class="qty-unit">szt.</span>
+            </div>
+          </label>
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Przęsło proste 2m" data-sku="PRZ-2000" 
                    data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF-Binary/Avocado.glb">
@@ -131,7 +143,7 @@
       mv.classList.add('hidden');
       placeholder.classList.add('visible');
       resetBtn.style.display = 'none';
-      mv.src = '';
+      mv.removeAttribute('src');
     }
 
     function showModel(src) {
@@ -139,21 +151,14 @@
       placeholder.classList.remove('visible');
       resetBtn.style.display = 'block';
       mv.style.opacity = '0.5';
+      mv.removeAttribute('src');
+      mv.src = src + '?t=' + Date.now(); // zapobiega cache
 
-      mv.src = '';
-      requestAnimationFrame(() => {
-        mv.src = src;
-        mv.dismissPoster();
-
-        const onLoad = () => {
-          mv.style.opacity = '1';
-          mv.cameraOrbit = '0deg 75deg 2.5m';
-          mv.jumpCameraToGoal();
-          mv.removeEventListener('load', onLoad);
-        };
-
-        mv.addEventListener('load', onLoad);
-      });
+      mv.addEventListener('load', () => {
+        mv.style.opacity = '1';
+        mv.cameraOrbit = '0deg 75deg 2.5m';
+        mv.jumpCameraToGoal();
+      }, { once: true });
     }
 
     optionsList.addEventListener('change', e => {
