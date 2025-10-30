@@ -115,16 +115,26 @@
     .option.selected::before { opacity: 1; }
     .option input[type="checkbox"]{ width:18px; height:18px; accent-color: var(--accent); }
     .option .meta{font-size:13px; color:var(--muted)}
-    .option .qty{
-      width:50px;
-      padding:4px 6px;
-      font-size:13px;
-      border-radius:6px;
-      border:1px solid rgba(255,255,255,0.1);
-      background:rgba(0,0,0,0.3);
-      color:#fff;
-      text-align:center;
-      display:none;
+    .qty-wrap {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      margin-left: auto;
+    }
+    .qty-label, .qty-unit {
+      font-size: 12px;
+      color: #9aa6b2;
+      white-space: nowrap;
+    }
+    .qty {
+      width: 48px;
+      padding: 4px 6px;
+      font-size: 13px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.3);
+      color: #fff;
+      text-align: center;
     }
 
     .summary{ font-size:13px; color:var(--muted); margin-top:8px; min-height:36px; }
@@ -158,6 +168,7 @@
     @media (max-width:980px){
       .card{ grid-template-columns: 1fr; padding:14px; }
       model-viewer{ height:400px; }
+      .qty-wrap { margin-left: 0; margin-top: 6px; width: 100%; justify-content: flex-end; }
     }
   </style>
 </head>
@@ -172,7 +183,8 @@
       <div class="viewer-wrap" style="margin-top:12px;">
         <model-viewer id="mv"
           src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf"
-          alt="Stalowa bariera ocynkowana"
+          alt="Podgląd 3D wybranego elementu bariery ochronnej"
+          aria-label="Interaktywny model 3D bariery – obracaj, przybliżaj, użyj AR"
           camera-controls
           auto-rotate
           ar
@@ -209,7 +221,11 @@
               <div><strong>Słup stalowy H=1000</strong></div>
               <div class="meta">SKU: SLP-1000 • Ø 60 mm • ocynk</div>
             </div>
-            <input type="number" class="qty" min="1" value="1">
+            <div class="qty-wrap">
+              <span class="qty-label">Ilość:</span>
+              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
+              <span class="qty-unit">szt.</span>
+            </div>
           </label>
 
           <!-- PRZĘSŁO -->
@@ -220,7 +236,11 @@
               <div><strong>Przęsło proste 2m</strong></div>
               <div class="meta">SKU: PRZ-2000 • siatka 50x50 • ocynk</div>
             </div>
-            <input type="number" class="qty" min="1" value="1">
+            <div class="qty-wrap">
+              <span class="qty-label">Ilość:</span>
+              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
+              <span class="qty-unit">szt.</span>
+            </div>
           </label>
 
           <!-- ZŁĄCZE -->
@@ -231,7 +251,11 @@
               <div><strong>Złącze kątowe 90°</strong></div>
               <div class="meta">SKU: ZLK-090 • śruby M8 • ocynk</div>
             </div>
-            <input type="number" class="qty" min="1" value="1">
+            <div class="qty-wrap">
+              <span class="qty-label">Ilość:</span>
+              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
+              <span class="qty-unit">szt.</span>
+            </div>
           </label>
 
           <!-- STOPKA -->
@@ -242,7 +266,11 @@
               <div><strong>Stopka montażowa 150mm</strong></div>
               <div class="meta">SKU: STP-150 • 4 otwory • ocynk</div>
             </div>
-            <input type="number" class="qty" min="1" value="1">
+            <div class="qty-wrap">
+              <span class="qty-label">Ilość:</span>
+              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
+              <span class="qty-unit">szt.</span>
+            </div>
           </label>
 
           <!-- OSŁONA -->
@@ -253,7 +281,11 @@
               <div><strong>Osłona krawędziowa</strong></div>
               <div class="meta">SKU: OSL-001 • guma + stal</div>
             </div>
-            <input type="number" class="qty" min="1" value="1">
+            <div class="qty-wrap">
+              <span class="qty-label">Ilość:</span>
+              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
+              <span class="qty-unit">szt.</span>
+            </div>
           </label>
         </div>
 
@@ -318,7 +350,6 @@
         }
       };
 
-      // Usuń poprzednie listenery
       mv.onload = null;
       mv.onerror = null;
 
@@ -337,9 +368,12 @@
 
     optionsList.addEventListener('change', (e) => {
       if (!e.target.classList.contains('item-check')) return;
-      const qtyInput = e.target.closest('.option').querySelector('.qty');
-      qtyInput.style.display = e.target.checked ? 'block' : 'none';
-      if (!e.target.checked) qtyInput.value = 1;
+      const qtyWrap = e.target.closest('.option').querySelector('.qty-wrap');
+      qtyWrap.style.display = e.target.checked ? 'flex' : 'none';
+      if (!e.target.checked) {
+        const qtyInput = qtyWrap.querySelector('.qty');
+        qtyInput.value = 1;
+      }
 
       const checked = optionsList.querySelectorAll('.item-check:checked');
       loadModel(checked.length > 0 ? checked[0].dataset.model : DEFAULT_MODEL);
@@ -356,7 +390,7 @@
       items.forEach(item => {
         const check = item.querySelector('.item-check');
         const qtyInput = item.querySelector('.qty');
-        if (check.checked && qtyInput.value >= 1) {
+        if (check.checked && qtyInput && qtyInput.value >= 1) {
           const name = check.dataset.name;
           const sku = check.dataset.sku;
           const qty = parseInt(qtyInput.value);
@@ -379,6 +413,7 @@
       if (e.target.classList.contains('qty')) {
         let val = parseInt(e.target.value);
         if (isNaN(val) || val < 1) e.target.value = 1;
+        if (val > 999) e.target.value = 999;
         updateSummary();
       }
     });
