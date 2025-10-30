@@ -153,13 +153,24 @@
 
       <div class="viewer-wrap" style="margin-top:12px;">
         <model-viewer id="mv"
-          src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/FencePanel/glTF/FencePanel.gltf"
+          src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
           alt="Model barier ocynkowanych"
           camera-controls
           auto-rotate
+          ar
+          ar-modes="webxr scene-viewer quick-look"
           exposure="1"
           shadow-intensity="0.5"
           camera-orbit="0deg 75deg 2.5m">
+
+          <button slot="ar-button" style="background:#00d1ff; color:#000; border:none; padding:10px 20px; border-radius:8px; font-weight:700; margin:12px;">
+            Zobacz w AR
+          </button>
+
+          <div slot="fallback" style="text-align:center; padding:20px; color:#aaa; font-size:14px;">
+            Model nie załadował się. <br>
+            <a href="https://provercel.vercel.app/" style="color:#00d1ff; text-decoration:underline;">Odśwież stronę</a>
+          </div>
         </model-viewer>
       </div>
 
@@ -174,7 +185,7 @@
         <label class="section-title">Wybierz elementy</label>
         <div class="options" id="optionsList">
           <label class="option">
-            <input type="checkbox" class="item-check" data-name="Słup stalowy H=1000" data-sku="SLP-1000" data-model="https://cdn.cgtrader.com/items/2823457/0e1f0d8c7d/free-3d-model-fence-panel-2m.glb">
+            <input type="checkbox" class="item-check" data-name="Słup stalowy H=1000" data-sku="SLP-1000" data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/MetalRoughSpheres/glTF/MetalRoughSpheres.gltf">
             <div style="flex:1">
               <div><strong>Słup stalowy H=1000</strong></div>
               <div class="meta">SKU: SLP-1000 • Ø fi 60</div>
@@ -183,7 +194,7 @@
           </label>
 
           <label class="option">
-            <input type="checkbox" class="item-check" data-name="Przęsło proste 2m" data-sku="PRZ-2000" data-model="https://cdn.cgtrader.com/items/2823457/0e1f0d8c7d/free-3d-model-fence-panel-2m.glb">
+            <input type="checkbox" class="item-check" data-name="Przęsło proste 2m" data-sku="PRZ-2000" data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Fence/glTF/Fence.gltf">
             <div style="flex:1">
               <div><strong>Przęsło proste 2m</strong></div>
               <div class="meta">SKU: PRZ-2000 • ocynk</div>
@@ -192,7 +203,7 @@
           </label>
 
           <label class="option">
-            <input type="checkbox" class="item-check" data-name="Złącze kątowe 90°" data-sku="ZLK-090" data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Connector/glTF/Connector.gltf">
+            <input type="checkbox" class="item-check" data-name="Złącze kątowe 90°" data-sku="ZLK-090" data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf">
             <div style="flex:1">
               <div><strong>Złącze kątowe 90°</strong></div>
               <div class="meta">SKU: ZLK-090 • śruby w komplecie</div>
@@ -201,7 +212,7 @@
           </label>
 
           <label class="option">
-            <input type="checkbox" class="item-check" data-name="Stopka montażowa 150mm" data-sku="STP-150" data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/BasePlate/glTF/BasePlate.gltf">
+            <input type="checkbox" class="item-check" data-name="Stopka montażowa 150mm" data-sku="STP-150" data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/WaterBottle/glTF/WaterBottle.gltf">
             <div style="flex:1">
               <div><strong>Stopka montażowa 150mm</strong></div>
               <div class="meta">SKU: STP-150</div>
@@ -210,7 +221,7 @@
           </label>
 
           <label class="option">
-            <input type="checkbox" class="item-check" data-name="Osłona krawędziowa" data-sku="OSL-001" data-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/EdgeGuard/glTF/EdgeGuard.gltf">
+            <input type="checkbox" class="item-check" data-name="Osłona krawędziowa" data-sku="OSL-001" data-model="https://modelviewer.dev/shared-assets/models/Astronaut.glb">
             <div style="flex:1">
               <div><strong>Osłona krawędziowa</strong></div>
               <div class="meta">SKU: OSL-001</div>
@@ -258,7 +269,7 @@
     const formSubject = document.getElementById('formSubject');
     const form = document.getElementById('requestForm');
 
-    const DEFAULT_MODEL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/FencePanel/glTF/FencePanel.gltf';
+    const DEFAULT_MODEL = 'https://modelviewer.dev/shared-assets/models/Astronaut.glb'; // Działa na pewno
 
     function loadModel(src) {
       if (mv.src === src) return;
