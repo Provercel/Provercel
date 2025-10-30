@@ -49,7 +49,6 @@
       background:var(--glass);
       padding:14px;
       border-radius:10px;
-      position: relative;
     }
     model-viewer{
       width:100%;
@@ -58,15 +57,6 @@
       background:linear-gradient(180deg,#071018,#001018);
       box-shadow: inset 0 -20px 60px rgba(0,0,0,0.6);
       transition: opacity 0.3s ease;
-    }
-    .loading-indicator {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: var(--muted);
-      font-size: 14px;
-      display: none;
     }
 
     .controls{
@@ -107,7 +97,6 @@
       position: relative;
       overflow: hidden;
       border: 1px solid rgba(255,255,255,0.05);
-      cursor: pointer;
     }
     .option::before {
       content: '';
@@ -124,12 +113,7 @@
       box-shadow: 0 0 14px rgba(0,209,255,0.25);
     }
     .option.selected::before { opacity: 1; }
-    .option input[type="checkbox"]{ 
-      width:18px; 
-      height:18px; 
-      accent-color: var(--accent); 
-      cursor: pointer;
-    }
+    .option input[type="checkbox"]{ width:18px; height:18px; accent-color: var(--accent); }
     .option .meta{font-size:13px; color:var(--muted)}
     .qty-wrap {
       display: none;
@@ -153,13 +137,7 @@
       text-align: center;
     }
 
-    .summary{ 
-      font-size:13px; 
-      color:var(--muted); 
-      margin-top:8px; 
-      min-height:36px; 
-      line-height: 1.4;
-    }
+    .summary{ font-size:13px; color:var(--muted); margin-top:8px; min-height:36px; }
 
     form{display:flex; flex-direction:column; gap:10px}
     input[type="text"], input[type="email"], textarea, select{
@@ -170,11 +148,6 @@
       background:rgba(0,0,0,0.25);
       color:#eaf6ff;
       font-size:14px;
-      transition: border-color 0.2s;
-    }
-    input[type="text"]:focus, input[type="email"]:focus, textarea:focus, select:focus {
-      outline: none;
-      border-color: rgba(0,209,255,0.4);
     }
     button{
       padding:10px 14px;
@@ -192,33 +165,10 @@
 
     footer{ margin-top:12px; font-size:12px; color:var(--muted); }
 
-    .error-message {
-      color: #ff6b6b;
-      font-size: 12px;
-      margin-top: 4px;
-      display: none;
-    }
-
-    .success-message {
-      background: rgba(0, 255, 136, 0.1);
-      border: 1px solid rgba(0, 255, 136, 0.3);
-      border-radius: 8px;
-      padding: 12px;
-      margin-top: 12px;
-      display: none;
-    }
-
     @media (max-width:980px){
       .card{ grid-template-columns: 1fr; padding:14px; }
       model-viewer{ height:400px; }
       .qty-wrap { margin-left: 0; margin-top: 6px; width: 100%; justify-content: flex-end; }
-    }
-
-    @media (max-width: 480px) {
-      body { padding: 14px; }
-      .card { padding: 12px; }
-      .viewer-wrap { padding: 8px; }
-      .panel { padding: 10px; }
     }
   </style>
 </head>
@@ -231,7 +181,6 @@
       </header>
 
       <div class="viewer-wrap" style="margin-top:12px;">
-        <div class="loading-indicator" id="loadingIndicator">Ładowanie modelu...</div>
         <model-viewer id="mv"
           src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf"
           alt="Podgląd 3D wybranego elementu bariery ochronnej"
@@ -352,11 +301,9 @@
 
           <label class="small">Firma / Imię</label>
           <input type="text" name="client_name" placeholder="Nazwa firmy lub imię" />
-          <div class="error-message" id="nameError">Proszę podać nazwę firmy lub imię</div>
 
           <label class="small">Adres e-mail</label>
           <input type="email" name="client_email" placeholder="twoj@proton.me" required />
-          <div class="error-message" id="emailError">Proszę podać poprawny adres e-mail</div>
 
           <label class="small">Uwagi</label>
           <textarea name="notes" rows="3" placeholder="Dodatkowe informacje (termin, montaż, itp.)"></textarea>
@@ -364,10 +311,6 @@
           <input type="hidden" name="selected_items" id="selected_items" value="">
 
           <button type="submit">Wyślij zapytanie</button>
-          
-          <div class="success-message" id="successMessage">
-            Dziękujemy za przesłanie zapytania! Skontaktujemy się z Tobą w ciągu 24 godzin.
-          </div>
         </form>
 
         <footer>
@@ -384,28 +327,14 @@
     const hiddenInput = document.getElementById('selected_items');
     const formSubject = document.getElementById('formSubject');
     const form = document.getElementById('requestForm');
-    const loadingIndicator = document.getElementById('loadingIndicator');
-    const nameError = document.getElementById('nameError');
-    const emailError = document.getElementById('emailError');
-    const successMessage = document.getElementById('successMessage');
 
     const DEFAULT_MODEL = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf';
 
-    function showLoading() {
-      loadingIndicator.style.display = 'block';
-    }
-
-    function hideLoading() {
-      loadingIndicator.style.display = 'none';
-    }
-
     function loadModel(src, retries = 3) {
       if (mv.src === src) return;
-      showLoading();
       mv.style.opacity = '0.5';
 
       const onLoad = () => {
-        hideLoading();
         mv.style.opacity = '1';
         mv.cameraOrbit = '0deg 75deg 2.5m';
         mv.jumpCameraToGoal();
@@ -437,32 +366,6 @@
       });
     }
 
-    function handleOptionClick(e) {
-      // Obsługa kliknięcia na cały element opcji
-      const option = e.target.closest('.option');
-      if (!option) return;
-      
-      const checkbox = option.querySelector('.item-check');
-      if (e.target === checkbox) return; // Jeśli kliknięto bezpośrednio w checkbox, nie wykonuj ponownie
-      
-      checkbox.checked = !checkbox.checked;
-      
-      const qtyWrap = option.querySelector('.qty-wrap');
-      qtyWrap.style.display = checkbox.checked ? 'flex' : 'none';
-      if (!checkbox.checked) {
-        const qtyInput = qtyWrap.querySelector('.qty');
-        qtyInput.value = 1;
-      }
-
-      const checked = optionsList.querySelectorAll('.item-check:checked');
-      loadModel(checked.length > 0 ? checked[0].dataset.model : DEFAULT_MODEL);
-
-      updateSummary();
-      updateHighlights();
-    }
-
-    optionsList.addEventListener('click', handleOptionClick);
-    
     optionsList.addEventListener('change', (e) => {
       if (!e.target.classList.contains('item-check')) return;
       const qtyWrap = e.target.closest('.option').querySelector('.qty-wrap');
@@ -515,53 +418,19 @@
       }
     });
 
-    function validateForm() {
-      let isValid = true;
-      
-      // Walidacja nazwy
-      const nameInput = form.querySelector('input[name="client_name"]');
-      if (!nameInput.value.trim()) {
-        nameError.style.display = 'block';
-        isValid = false;
-      } else {
-        nameError.style.display = 'none';
-      }
-      
-      // Walidacja emaila
-      const emailInput = form.querySelector('input[name="client_email"]');
-      const emailRegex = /^\S+@\S+\.\S+$/;
-      if (!emailRegex.test(emailInput.value.trim())) {
-        emailError.style.display = 'block';
-        isValid = false;
-      } else {
-        emailError.style.display = 'none';
-      }
-      
-      return isValid;
-    }
-
     form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      
-      if (!validateForm()) {
+      const email = form.querySelector('input[name="client_email"]').value.trim();
+      if (!/^\S+@\S+\.\S+$/.test(email)) {
+        alert('Podaj poprawny adres e-mail.');
+        e.preventDefault();
         return;
       }
-      
       try {
         const cam = mv.getCameraOrbit();
         const extra = `\n\n---\nWidok 3D: obrót=${cam.theta.toFixed(0)}°, nachylenie=${cam.phi.toFixed(0)}°, odległość=${cam.radius.toFixed(2)}m`;
         const notesField = form.querySelector('textarea[name="notes"]');
         notesField.value = (notesField.value.trim() + extra).trim();
-        
-        // Symulacja wysłania formularza
-        successMessage.style.display = 'block';
-        setTimeout(() => {
-          form.submit();
-        }, 2000);
-      } catch (err) {
-        // Jeśli nie uda się pobrać danych kamery, wysyłamy formularz bez nich
-        form.submit();
-      }
+      } catch (err) {}
     });
 
     // Inicjalizacja
