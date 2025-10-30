@@ -8,9 +8,6 @@
   <!-- Model Viewer -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
-  <!-- Preload -->
-  <link rel="preload" href="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js" as="script">
-
   <style>
     :root{
       --bg:#0b0f14;
@@ -61,7 +58,41 @@
       background:var(--glass);
       padding:14px;
       border-radius:10px;
+      position: relative;
+      overflow: hidden;
     }
+
+    .placeholder {
+      position: absolute;
+      inset: 14px;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #071018, #001018);
+      box-shadow: inset 0 -20px 60px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 14px;
+      gap: 12px;
+      transition: opacity 0.3s ease;
+      z-index: 2;
+    }
+
+    .placeholder .icon {
+      width: 80px;
+      height: 80px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: bold;
+      color: #000;
+      opacity: 0.9;
+    }
+
     model-viewer{
       width:100%;
       height:520px;
@@ -70,6 +101,9 @@
       box-shadow: inset 0 -20px 60px rgba(0,0,0,0.6);
       transition: opacity 0.3s ease;
       touch-action: pan-y;
+      display: none;
+      position: relative;
+      z-index: 1;
     }
 
     .controls{
@@ -153,7 +187,7 @@
     .summary{ font-size:13px; color:var(--muted); margin-top:8px; min-height:36px; }
 
     form{display:flex; flex-direction:column; gap:10px}
-    input[type="text"], input[type="email"], textarea, select{
+    input[type="text"], input[type="email"], textarea{
       width:100%;
       padding:10px;
       border-radius:8px;
@@ -173,7 +207,7 @@
       box-shadow: 0 8px 24px rgba(0,209,255,0.08);
       transition: transform 0.2s;
     }
-    button:hover { transform: translateY(-1px); }
+    button:hover:not(:disabled) { transform: translateY(-1px); }
     button:disabled {
       opacity: 0.6;
       cursor: not-allowed;
@@ -185,7 +219,8 @@
 
     @media (max-width:980px){
       .card{ grid-template-columns: 1fr; padding:14px; }
-      model-viewer{ height:400px; }
+      model-viewer, .placeholder { height:400px; }
+      .placeholder .icon { width: 60px; height: 60px; font-size: 28px; }
       .qty-wrap { margin-left: 0; margin-top: 6px; width: 100%; justify-content: flex-end; }
     }
   </style>
@@ -198,11 +233,15 @@
         <p>Przeglądaj model 3D, wybierz elementy i wyślij zapytanie.</p>
       </header>
 
-      <div class="viewer-label" id="viewerLabel">Pełny system barier ochronnych</div>
+      <div class="viewer-label" id="viewerLabel">Wybierz element, aby zobaczyć model 3D</div>
 
-      <div class="viewer-wrap">
+      <div class="viewer-wrap" id="viewerWrap">
+        <div id="placeholder" class="placeholder">
+          <div class="icon">Barrier</div>
+          <div class="text">Wybierz element, aby zobaczyć model 3D</div>
+        </div>
+
         <model-viewer id="mv"
-          src=""
           alt="Podgląd 3D wybranego elementu bariery ochronnej"
           aria-label="Interaktywny model 3D bariery – obracaj, przybliżaj, użyj AR"
           camera-controls
@@ -213,7 +252,7 @@
           shadow-intensity="1"
           environment-image="neutral"
           camera-orbit="0deg 75deg 2.5m"
-          loading="eager"
+          loading="lazy"
           touch-action="pan-y">
 
           <button slot="ar-button" style="background:#00d1ff; color:#000; border:none; padding:10px 20px; border-radius:8px; font-weight:700; margin:12px;">
@@ -343,16 +382,33 @@
 
   <script>
     const mv = document.getElementById('mv');
+    const viewerWrap = document.getElementById('viewerWrap');
+    const placeholder = document.getElementById('placeholder');
+    const viewerLabel = document.getElementById('viewerLabel');
     const optionsList = document.getElementById('optionsList');
     const summary = document.getElementById('summary');
     const hiddenInput = document.getElementById('selected_items');
     const formSubject = document.getElementById('formSubject');
     const form = document.getElementById('requestForm');
-    const viewerLabel = document.getElementById('viewerLabel');
 
-    // ZMIEŃ NA SWÓJ MODEL!
-    const EMPTY_STATE_MODEL = '/models/barrier_full.glb'; // <-- WRZUĆ SWÓJ .glb TUTAJ
     const FALLBACK_MODEL = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf';
+
+    function showPlaceholder() {
+      placeholder.style.opacity = '1';
+      placeholder.style.display = 'flex';
+      mv.style.display = 'none';
+      mv.src = '';
+      viewerLabel.textContent = 'Wybierz element, aby zobaczyć model 3D';
+    }
+
+    function showModel(src) {
+      placeholder.style.opacity = '0';
+      setTimeout(() => {
+        placeholder.style.display = 'none';
+        mv.style.display = 'block';
+        loadModel(src);
+      }, 300);
+    }
 
     function loadModel(src, retries = 3) {
       if (mv.src === src) return;
@@ -365,13 +421,12 @@
       };
 
       const onError = (attempt) => {
-        console.warn(`Błąd ładowania modelu (próba ${attempt}): ${src}`);
+        console.warn(`Błąd ładowania (próba ${attempt}): ${src}`);
         if (attempt < retries) {
           setTimeout(() => loadModel(src, retries - 1), 1000 * attempt);
         } else {
-          console.error('Ostateczny błąd – fallback');
-          mv.src = FALLBACK_MODEL;
-          mv.style.opacity = '1';
+          showPlaceholder();
+          console.error('Fallback do placeholdera');
         }
       };
 
@@ -388,17 +443,6 @@
         const checkbox = option.querySelector('.item-check');
         option.classList.toggle('selected', checkbox.checked);
       });
-    }
-
-    function updateViewerLabel() {
-      const checked = optionsList.querySelectorAll('.item-check:checked');
-      if (checked.length === 0) {
-        viewerLabel.textContent = 'Pełny system barier ochronnych';
-      } else if (checked.length === 1) {
-        viewerLabel.textContent = checked[0].dataset.name;
-      } else {
-        viewerLabel.textContent = `${checked.length} elementy wybrane`;
-      }
     }
 
     function updateSummary() {
@@ -422,7 +466,12 @@
       hiddenInput.value = selected.length ? selected.map(s => s.replace(/ × /g, 'x')).join('; ') : '';
       formSubject.value = totalQty ? `Zapytanie z Provercel - 3D (${totalQty} szt.)` : 'Zapytanie z Provercel - 3D';
 
-      updateViewerLabel();
+      const checked = optionsList.querySelectorAll('.item-check:checked');
+      if (checked.length === 1) {
+        viewerLabel.textContent = checked[0].dataset.name;
+      } else if (checked.length > 1) {
+        viewerLabel.textContent = `${checked.length} elementy wybrane`;
+      }
     }
 
     optionsList.addEventListener('change', (e) => {
@@ -431,16 +480,16 @@
       const option = e.target.closest('.option');
       const qtyWrap = option.querySelector('.qty-wrap');
       qtyWrap.style.display = e.target.checked ? 'flex' : 'none';
-
-      if (!e.target.checked) {
-        const qtyInput = qtyWrap.querySelector('.qty');
-        qtyInput.value = 1;
-      }
+      if (!e.target.checked) qtyWrap.querySelector('.qty').value = 1;
 
       const checked = optionsList.querySelectorAll('.item-check:checked');
-      const targetModel = checked.length === 0 ? EMPTY_STATE_MODEL : checked[0].dataset.model;
 
-      loadModel(targetModel);
+      if (checked.length === 0) {
+        showPlaceholder();
+      } else {
+        showModel(checked[0].dataset.model);
+      }
+
       updateSummary();
       updateHighlights();
     });
@@ -485,9 +534,9 @@
       }, 3000);
     });
 
-    // Inicjalizacja
+    // Start: placeholder
     window.addEventListener('load', () => {
-      loadModel(EMPTY_STATE_MODEL);
+      showPlaceholder();
       updateSummary();
       updateHighlights();
     });
