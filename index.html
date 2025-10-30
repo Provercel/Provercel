@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Provercel — Barierowe rozwiązania 3D</title>
 
+  <!-- Model Viewer -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
   <style>
@@ -170,7 +171,7 @@
 
       <div class="viewer-wrap" style="margin-top:12px;">
         <model-viewer id="mv"
-          src="https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Box/glTF-Binary/Box.glb"
+          src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf"
           alt="Stalowa bariera ocynkowana"
           camera-controls
           auto-rotate
@@ -179,16 +180,14 @@
           exposure="1.2"
           shadow-intensity="1"
           environment-image="neutral"
-          camera-orbit="0deg 75deg 2.5m">
+          camera-orbit="0deg 75deg 2.5m"
+          loading="eager">
 
           <button slot="ar-button" style="background:#00d1ff; color:#000; border:none; padding:10px 20px; border-radius:8px; font-weight:700; margin:12px;">
             Zobacz w AR
           </button>
 
-          <div slot="fallback" style="text-align:center; padding:20px; color:#aaa; font-size:14px;">
-            Model nie załadował się. <br>
-            <a href="#" onclick="location.reload()" style="color:#00d1ff; text-decoration:underline;">Odśwież</a>
-          </div>
+          <div slot="progress-bar" style="background:#333; height:4px; border-radius:2px;"></div>
         </model-viewer>
       </div>
 
@@ -205,7 +204,7 @@
           <!-- SŁUP -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Słup stalowy H=1000" data-sku="SLP-1000" 
-                   data-model="https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Cylinder/glTF-Binary/Cylinder.glb">
+                   data-model="https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/primary_ion_drive.glb">
             <div style="flex:1">
               <div><strong>Słup stalowy H=1000</strong></div>
               <div class="meta">SKU: SLP-1000 • Ø 60 mm • ocynk</div>
@@ -216,7 +215,7 @@
           <!-- PRZĘSŁO -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Przęsło proste 2m" data-sku="PRZ-2000" 
-                   data-model="https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Plane/glTF-Binary/Plane.glb">
+                   data-model="https://threejs.org/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb">
             <div style="flex:1">
               <div><strong>Przęsło proste 2m</strong></div>
               <div class="meta">SKU: PRZ-2000 • siatka 50x50 • ocynk</div>
@@ -227,7 +226,7 @@
           <!-- ZŁĄCZE -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Złącze kątowe 90°" data-sku="ZLK-090" 
-                   data-model="https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Sphere/glTF-Binary/Sphere.glb">
+                   data-model="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Duck/glTF-Binary/Duck.glb">
             <div style="flex:1">
               <div><strong>Złącze kątowe 90°</strong></div>
               <div class="meta">SKU: ZLK-090 • śruby M8 • ocynk</div>
@@ -238,7 +237,7 @@
           <!-- STOPKA -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Stopka montażowa 150mm" data-sku="STP-150" 
-                   data-model="https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Helix/glTF-Binary/Helix.glb">
+                   data-model="https://threejs.org/examples/models/gltf/Flamingo.glb">
             <div style="flex:1">
               <div><strong>Stopka montażowa 150mm</strong></div>
               <div class="meta">SKU: STP-150 • 4 otwory • ocynk</div>
@@ -249,7 +248,7 @@
           <!-- OSŁONA -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Osłona krawędziowa" data-sku="OSL-001" 
-                   data-model="https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Torus/glTF-Binary/Torus.glb">
+                   data-model="https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/Parrot.glb">
             <div style="flex:1">
               <div><strong>Osłona krawędziowa</strong></div>
               <div class="meta">SKU: OSL-001 • guma + stal</div>
@@ -297,54 +296,56 @@
     const formSubject = document.getElementById('formSubject');
     const form = document.getElementById('requestForm');
 
-    const DEFAULT_MODEL = 'https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Box/glTF-Binary/Box.glb';
+    const DEFAULT_MODEL = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf';
 
-    function loadModel(src) {
+    function loadModel(src, retries = 3) {
       if (mv.src === src) return;
       mv.style.opacity = '0.5';
-      
-      // Obsługa błędów ładowania
-      const errorHandler = () => {
-        console.warn('Błąd ładowania modelu:', src);
-        mv.src = DEFAULT_MODEL; // Fallback do default
-        setTimeout(() => loadModel(DEFAULT_MODEL), 100); // Ponowne ładowanie
-      };
-      
-      mv.removeEventListener('error', errorHandler); // Usuń poprzedni listener
-      mv.addEventListener('error', errorHandler, { once: true });
-      
-      mv.src = src;
-      mv.addEventListener('load', () => {
+
+      const onLoad = () => {
         mv.style.opacity = '1';
         mv.cameraOrbit = '0deg 75deg 2.5m';
         mv.jumpCameraToGoal();
-      }, { once: true });
+      };
+
+      const onError = (attempt) => {
+        console.warn(`Błąd ładowania modelu (próba ${attempt}): ${src}`);
+        if (attempt < retries) {
+          setTimeout(() => loadModel(src, retries - 1), 1000 * attempt);
+        } else {
+          console.error('Ostateczny błąd – fallback do domyślnego');
+          mv.src = DEFAULT_MODEL;
+        }
+      };
+
+      // Usuń poprzednie listenery
+      mv.onload = null;
+      mv.onerror = null;
+
+      mv.addEventListener('load', onLoad, { once: true });
+      mv.addEventListener('error', () => onError(1), { once: true });
+
+      mv.src = src;
     }
 
     function updateHighlights() {
-      const options = optionsList.querySelectorAll('.option');
-      options.forEach(option => {
+      optionsList.querySelectorAll('.option').forEach(option => {
         const checkbox = option.querySelector('.item-check');
         option.classList.toggle('selected', checkbox.checked);
       });
     }
 
     optionsList.addEventListener('change', (e) => {
-      if (e.target.classList.contains('item-check')) {
-        const qtyInput = e.target.closest('.option').querySelector('.qty');
-        qtyInput.style.display = e.target.checked ? 'block' : 'none';
-        if (!e.target.checked) qtyInput.value = 1;
+      if (!e.target.classList.contains('item-check')) return;
+      const qtyInput = e.target.closest('.option').querySelector('.qty');
+      qtyInput.style.display = e.target.checked ? 'block' : 'none';
+      if (!e.target.checked) qtyInput.value = 1;
 
-        const checked = optionsList.querySelectorAll('.item-check:checked');
-        if (checked.length > 0) {
-          loadModel(checked[0].dataset.model);
-        } else {
-          loadModel(DEFAULT_MODEL);
-        }
+      const checked = optionsList.querySelectorAll('.item-check:checked');
+      loadModel(checked.length > 0 ? checked[0].dataset.model : DEFAULT_MODEL);
 
-        updateSummary();
-        updateHighlights();
-      }
+      updateSummary();
+      updateHighlights();
     });
 
     function updateSummary() {
@@ -368,9 +369,6 @@
       hiddenInput.value = selected.length ? selected.map(s => s.replace(/ × /g, 'x')).join('; ') : '';
       formSubject.value = totalQty ? `Zapytanie z Provercel - 3D (${totalQty} szt.)` : 'Zapytanie z Provercel - 3D';
     }
-
-    updateSummary();
-    updateHighlights();
 
     document.getElementById('resetView').addEventListener('click', () => {
       mv.cameraOrbit = '0deg 75deg 2.5m';
@@ -400,8 +398,11 @@
       } catch (err) {}
     });
 
+    // Inicjalizacja
     window.addEventListener('load', () => {
       loadModel(DEFAULT_MODEL);
+      updateSummary();
+      updateHighlights();
     });
   </script>
 </body>
