@@ -87,13 +87,13 @@
       scrollbar-gutter: stable;
     }
 
-    /* === ANIMOWANA OPCJA — ZWIĘKSZONE MIEJSCE NA OPIS === */
+    /* === ANIMOWANA OPCJA === */
     .option{
       display:flex;
-      align-items:flex-start;
-      gap:12px;
+      align-items:center;
+      gap:10px;
       background:linear-gradient(90deg, rgba(0,0,0,0.15), rgba(255,255,255,0.01));
-      padding:12px 14px;
+      padding:8px;
       border-radius:8px;
       transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
@@ -130,39 +130,19 @@
       cursor: pointer;
       transform: scale(1);
       transition: transform 0.25s ease;
-      margin-top: 2px;
     }
     .option.selected input[type="checkbox"] {
       transform: scale(1.12);
     }
 
-    /* === OPIS — WIĘCEJ MIEJSCA === */
-    .option > div[style="flex:1"] {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      min-width: 0;
-      flex: 1;
-    }
-    .option > div[style="flex:1"] > div:first-child {
-      font-size: 14.5px;
-      line-height: 1.4;
-      font-weight: 600;
-      color: #ffffff;
-    }
-    .option .meta{
-      font-size: 12.5px;
-      line-height: 1.35;
-      color: #a8b8c8;
-      opacity: 0.9;
-    }
+    .option .meta{font-size:13px; color:var(--muted)}
 
-    /* === ANIMOWANY QTY-WRAP === */
+    /* === ANIMOWANY QTY-WRAP (wysuwanie z prawej) === */
     .qty-wrap {
       display: flex;
       align-items: center;
       gap: 6px;
-      margin-left: 12px;
+      margin-left: auto;
       opacity: 0;
       visibility: hidden;
       width: 0;
@@ -174,7 +154,6 @@
         width 0.35s ease,
         transform 0.35s cubic-bezier(0.2, 0, 0, 1),
         visibility 0.35s;
-      min-width: 110px;
     }
     .qty-wrap.active {
       opacity: 1;
@@ -227,24 +206,11 @@
 
     footer{ margin-top:12px; font-size:12px; color:var(--muted); }
 
-    /* === RESPONSIVE — MOBILE === */
     @media (max-width:980px){
       .card{ grid-template-columns: 1fr; padding:14px; }
       model-viewer{ height:400px; }
-
-      .option {
-        flex-wrap: wrap;
-        padding: 14px;
-      }
-      .qty-wrap {
-        margin-left: 30px;
-        margin-top: 8px;
-        width: calc(100% - 42px);
-        justify-content: flex-start;
-      }
-      .qty-wrap.active {
-        width: calc(100% - 42px);
-      }
+      .qty-wrap { margin-left: 0; margin-top: 6px; width: 100%; justify-content: flex-end; }
+      .qty-wrap.active { width: 100%; }
     }
   </style>
 </head>
@@ -458,6 +424,7 @@
 
       lastClickedModel = checkbox.dataset.model;
 
+      // ANIMACJA: używamy klasy .active zamiast display
       qtyWrap.classList.toggle('active', checkbox.checked);
 
       if (!checkbox.checked) {
