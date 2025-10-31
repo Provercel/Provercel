@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Provercel — Barierowe rozwiązania 3D</title>
 
+  <!-- Model Viewer -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
   <style>
@@ -86,20 +87,19 @@
       scrollbar-gutter: stable;
     }
 
-    /* === OPCJA Z WIĘCEJ MIEJSCA === */
+    /* === ANIMOWANA OPCJA — ZWIĘKSZONE MIEJSCE NA OPIS === */
     .option{
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: linear-gradient(90deg, rgba(0,0,0,0.15), rgba(255,255,255,0.01));
-      padding: 10px 12px;
-      border-radius: 10px;
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+      background:linear-gradient(90deg, rgba(0,0,0,0.15), rgba(255,255,255,0.01));
+      padding:12px 14px;
+      border-radius:8px;
       transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
       border: 1px solid rgba(255,255,255,0.05);
       cursor: pointer;
-      min-height: 64px;
     }
     .option::before {
       content: '';
@@ -109,7 +109,7 @@
       opacity: 0;
       transition: opacity 0.35s ease;
       pointer-events: none;
-      border-radius: 10px;
+      border-radius: 8px;
     }
     .option:hover:not(.selected) {
       border-color: rgba(255,255,255,0.12);
@@ -123,37 +123,46 @@
     }
     .option.selected::before { opacity: 1; }
 
+    /* Checkbox animowany */
     .option input[type="checkbox"]{
-      width: 20px; height: 20px;
+      width:18px; height:18px;
       accent-color: var(--accent);
       cursor: pointer;
       transform: scale(1);
       transition: transform 0.25s ease;
-      flex-shrink: 0;
+      margin-top: 2px;
     }
     .option.selected input[type="checkbox"] {
-      transform: scale(1.15);
+      transform: scale(1.12);
     }
 
+    /* === OPIS — WIĘCEJ MIEJSCA === */
     .option > div[style="flex:1"] {
-      flex: 1;
-      min-width: 0;
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 3px;
+      min-width: 0;
+      flex: 1;
     }
-    .option .meta {
-      font-size: 13px;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .option > div[style="flex:1"] > div:first-child {
+      font-size: 14.5px;
+      line-height: 1.4;
+      font-weight: 600;
+      color: #ffffff;
+    }
+    .option .meta{
+      font-size: 12.5px;
+      line-height: 1.35;
+      color: #a8b8c8;
+      opacity: 0.9;
     }
 
+    /* === ANIMOWANY QTY-WRAP === */
     .qty-wrap {
       display: flex;
       align-items: center;
       gap: 6px;
+      margin-left: 12px;
       opacity: 0;
       visibility: hidden;
       width: 0;
@@ -166,8 +175,6 @@
         transform 0.35s cubic-bezier(0.2, 0, 0, 1),
         visibility 0.35s;
       min-width: 110px;
-      justify-content: flex-end;
-      flex-shrink: 0;
     }
     .qty-wrap.active {
       opacity: 1;
@@ -220,15 +227,28 @@
 
     footer{ margin-top:12px; font-size:12px; color:var(--muted); }
 
+    /* === RESPONSIVE — MOBILE === */
     @media (max-width:980px){
       .card{ grid-template-columns: 1fr; padding:14px; }
       model-viewer{ height:400px; }
-      .qty-wrap, .qty-wrap.active { min-width: auto; width: 100%; justify-content: flex-end; margin-top: 6px; }
+
+      .option {
+        flex-wrap: wrap;
+        padding: 14px;
+      }
+      .qty-wrap {
+        margin-left: 30px;
+        margin-top: 8px;
+        width: calc(100% - 42px);
+        justify-content: flex-start;
+      }
+      .qty-wrap.active {
+        width: calc(100% - 42px);
+      }
     }
   </style>
 </head>
 <body>
-  <!-- HTML bez zmian – identyczny jak wcześniej -->
   <div class="card" role="main">
     <div>
       <header>
@@ -269,7 +289,7 @@
       <div class="panel">
         <label class="section-title">Wybierz elementy</label>
         <div class="options" id="optionsList">
-          <!-- [5x .option] – bez zmian -->
+          <!-- SŁUP -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Słup stalowy H=1000" data-sku="SLP-1000" 
                    data-model="https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/primary_ion_drive.glb">
@@ -283,37 +303,100 @@
               <span class="qty-unit">szt.</span>
             </div>
           </label>
-          <!-- ... reszta identyczna ... -->
+
+          <!-- PRZĘSŁO -->
+          <label class="option">
+            <input type="checkbox" class="item-check" data-name="Przęsło proste 2m" data-sku="PRZ-2000" 
+                   data-model="https://threejs.org/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb">
+            <div style="flex:1">
+              <div><strong>Przęsło proste 2m</strong></div>
+              <div class="meta">SKU: PRZ-2000 • siatka 50x50 • ocynk</div>
+            </div>
+            <div class="qty-wrap">
+              <span class="qty-label">Ilość:</span>
+              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
+              <span class="qty-unit">szt.</span>
+            </div>
+          </label>
+
+          <!-- ZŁĄCZE -->
+          <label class="option">
+            <input type="checkbox" class="item-check" data-name="Złącze kątowe 90°" data-sku="ZLK-090" 
+                   data-model="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Duck/glTF-Binary/Duck.glb">
+            <div style="flex:1">
+              <div><strong>Złącze kątowe 90°</strong></div>
+              <div class="meta">SKU: ZLK-090 • śruby M8 • ocynk</div>
+            </div>
+            <div class="qty-wrap">
+              <span class="qty-label">Ilość:</span>
+              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
+              <span class="qty-unit">szt.</span>
+            </div>
+          </label>
+
+          <!-- STOPKA -->
+          <label class="option">
+            <input type="checkbox" class="item-check" data-name="Stopka montażowa 150mm" data-sku="STP-150" 
+                   data-model="https://threejs.org/examples/models/gltf/Flamingo.glb">
+            <div style="flex:1">
+              <div><strong>Stopka montażowa 150mm</strong></div>
+              <div class="meta">SKU: STP-150 • 4 otwory • ocynk</div>
+            </div>
+            <div class="qty-wrap">
+              <span class="qty-label">Ilość:</span>
+              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
+              <span class="qty-unit">szt.</span>
+            </div>
+          </label>
+
+          <!-- OSŁONA -->
+          <label class="option">
+            <input type="checkbox" class="item-check" data-name="Osłona krawędziowa" data-sku="OSL-001" 
+                   data-model="https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/Parrot.glb">
+            <div style="flex:1">
+              <div><strong>Osłona krawędziowa</strong></div>
+              <div class="meta">SKU: OSL-001 • guma + stal</div>
+            </div>
+            <div class="qty-wrap">
+              <span class="qty-label">Ilość:</span>
+              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
+              <span class="qty-unit">szt.</span>
+            </div>
+          </label>
         </div>
 
         <div class="summary" id="summary">Wybrane: brak</div>
       </div>
 
-      <!-- Formularz bez zmian -->
       <div class="panel">
         <label class="section-title">Szczegóły zapytania</label>
         <form id="requestForm" action="https://formsubmit.co/provercel@proton.me" method="POST">
           <input type="text" name="_honey" style="display:none">
           <input type="hidden" name="_next" value="https://provercel.vercel.app/">
           <input type="hidden" name="_subject" id="formSubject" value="Zapytanie z Provercel - 3D">
+
           <label class="small">Firma / Imię</label>
           <input type="text" name="client_name" placeholder="Nazwa firmy lub imię" />
+
           <label class="small">Adres e-mail</label>
           <input type="email" name="client_email" placeholder="twoj@proton.me" required />
+
           <label class="small">Uwagi</label>
           <textarea name="notes" rows="3" placeholder="Dodatkowe informacje (termin, montaż, itp.)"></textarea>
+
           <input type="hidden" name="selected_items" id="selected_items" value="">
+
           <button type="submit">Wyślij zapytanie</button>
         </form>
-        <footer><div class="small">Wiadomości na <strong>provercel@proton.me</strong>.</div></footer>
+
+        <footer>
+          <div class="small">Wiadomości na <strong>provercel@proton.me</strong>.</div>
+        </footer>
       </div>
     </aside>
   </div>
 
   <script>
-    // JS bez zmian – tylko jedna linia zmieniona wcześniej:
-    // qtyWrap.classList.toggle('active', checkbox.checked);
-    // (pełny skrypt identyczny jak w poprzedniej wersji)
     const mv = document.getElementById('mv');
     const optionsList = document.getElementById('optionsList');
     const summary = document.getElementById('summary');
@@ -327,13 +410,30 @@
     function loadModel(src, retries = 3) {
       if (mv.src === src) return;
       mv.style.opacity = '0.5';
-      const onLoad = () => { mv.style.opacity = '1'; mv.cameraOrbit = '0deg 75deg 2.5m'; mv.jumpCameraToGoal(); };
-      const onError = (attempt) => {
-        if (attempt < retries) setTimeout(() => loadModel(src, retries - 1), 1000 * attempt);
-        else { mv.src = DEFAULT_MODEL; lastClickedModel = DEFAULT_MODEL; }
+
+      const onLoad = () => {
+        mv.style.opacity = '1';
+        mv.cameraOrbit = '0deg 75deg 2.5m';
+        mv.jumpCameraToGoal();
       };
+
+      const onError = (attempt) => {
+        console.warn(`Błąd ładowania modelu (próba ${attempt}): ${src}`);
+        if (attempt < retries) {
+          setTimeout(() => loadModel(src, retries - 1), 1000 * attempt);
+        } else {
+          console.error('Ostateczny błąd – fallback do domyślnego');
+          mv.src = DEFAULT_MODEL;
+          lastClickedModel = DEFAULT_MODEL;
+        }
+      };
+
+      mv.onload = null;
+      mv.onerror = null;
+
       mv.addEventListener('load', onLoad, { once: true });
       mv.addEventListener('error', () => onError(1), { once: true });
+
       mv.src = src;
     }
 
@@ -347,39 +447,67 @@
     optionsList.addEventListener('click', (e) => {
       const checkbox = e.target.closest('.item-check');
       if (!checkbox) return;
+
       const option = checkbox.closest('.option');
       const qtyWrap = option.querySelector('.qty-wrap');
-      if (!e.target.matches('input')) { checkbox.checked = !checkbox.checked; e.preventDefault(); }
+
+      if (!e.target.matches('input')) {
+        checkbox.checked = !checkbox.checked;
+        e.preventDefault();
+      }
+
       lastClickedModel = checkbox.dataset.model;
+
       qtyWrap.classList.toggle('active', checkbox.checked);
-      if (!checkbox.checked) qtyWrap.querySelector('.qty').value = 1;
+
+      if (!checkbox.checked) {
+        const qtyInput = qtyWrap.querySelector('.qty');
+        qtyInput.value = 1;
+      }
 
       const checked = optionsList.querySelectorAll('.item-check:checked');
-      if (checked.length === 0) { loadModel(DEFAULT_MODEL); lastClickedModel = DEFAULT_MODEL; }
-      else if (checkbox.checked) loadModel(lastClickedModel);
-      else if (mv.src === lastClickedModel) { loadModel(checked[0].dataset.model); lastClickedModel = checked[0].dataset.model; }
 
-      updateSummary(); updateHighlights();
+      if (checked.length === 0) {
+        loadModel(DEFAULT_MODEL);
+        lastClickedModel = DEFAULT_MODEL;
+      } else if (checkbox.checked) {
+        loadModel(lastClickedModel);
+      } else {
+        if (mv.src === lastClickedModel) {
+          loadModel(checked[0].dataset.model);
+          lastClickedModel = checked[0].dataset.model;
+        }
+      }
+
+      updateSummary();
+      updateHighlights();
     });
 
     function updateSummary() {
       const items = Array.from(optionsList.querySelectorAll('.option'));
-      const selected = []; let totalQty = 0;
+      const selected = [];
+      let totalQty = 0;
+
       items.forEach(item => {
         const check = item.querySelector('.item-check');
         const qtyInput = item.querySelector('.qty');
         if (check.checked && qtyInput && qtyInput.value >= 1) {
-          const name = check.dataset.name; const sku = check.dataset.sku; const qty = parseInt(qtyInput.value);
-          totalQty += qty; selected.push(`${name} × ${qty}${sku ? ' (' + sku + ')' : ''}`);
+          const name = check.dataset.name;
+          const sku = check.dataset.sku;
+          const qty = parseInt(qtyInput.value);
+          totalQty += qty;
+          selected.push(`${name} × ${qty}${sku ? ' (' + sku + ')' : ''}`);
         }
       });
+
       summary.textContent = selected.length ? 'Wybrane: ' + selected.join(' • ') : 'Wybrane: brak';
       hiddenInput.value = selected.length ? selected.map(s => s.replace(/ × /g, 'x')).join('; ') : '';
       formSubject.value = totalQty ? `Zapytanie z Provercel - 3D (${totalQty} szt.)` : 'Zapytanie z Provercel - 3D';
     }
 
     document.getElementById('resetView').addEventListener('click', () => {
-      mv.cameraOrbit = '0deg 75deg 2.5m'; mv.jumpCameraToGoal();
+      mv.cameraOrbit = '0deg 75deg 2.5m';
+      mv.jumpCameraToGoal();
     });
 
     optionsList.addEventListener('input', (e) => {
@@ -393,7 +521,11 @@
 
     form.addEventListener('submit', (e) => {
       const email = form.querySelector('input[name="client_email"]').value.trim();
-      if (!/^\S+@\S+\.\S+$/.test(email)) { alert('Podaj poprawny adres e-mail.'); e.preventDefault(); return; }
+      if (!/^\S+@\S+\.\S+$/.test(email)) {
+        alert('Podaj poprawny adres e-mail.');
+        e.preventDefault();
+        return;
+      }
       try {
         const cam = mv.getCameraOrbit();
         const extra = `\n\n---\nWidok 3D: obrót=${cam.theta.toFixed(0)}°, nachylenie=${cam.phi.toFixed(0)}°, odległość=${cam.radius.toFixed(2)}m`;
@@ -402,6 +534,7 @@
       } catch (err) {}
     });
 
+    // Inicjalizacja
     window.addEventListener('load', () => {
       loadModel(DEFAULT_MODEL);
       updateSummary();
