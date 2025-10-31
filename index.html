@@ -742,13 +742,13 @@ footer{ margin-top:12px; font-size:12px; color:var(--muted); }
    <form id="requestForm" action="https://formsubmit.co/provercel@proton.me" method="POST"> 
      <input type="text" name="_honey" style="display:none"> 
      <input type="hidden" name="_next" value="https://provercel.vercel.app/"> 
-     <input type="hidden" name="_subject" id="formSubject" value="Zapytanie z Provercel - 3D"> 
+     <input type="hidden" name="_subject" id="formSubject" value="Zapytanie z Provercel"> 
      <label class="small">Firma / Imię</label> 
      <input type="text" name="client_name" placeholder="Nazwa firmy lub imię" /> 
      <label class="small">Adres e-mail</label> 
-     <input type="email" name="client_email" placeholder="twoj@proton.me" required /> 
+     <input type="email" name="client_email" placeholder="Twój email" required /> 
      <label class="small">Uwagi</label> 
-     <textarea name="notes" rows="3" placeholder="Dodatkowe informacje (termin, montaż, itp.)"></textarea> 
+     <textarea name="notes" rows="3" placeholder="Dodatkowe informacje (termin, transport, itp.)"></textarea> 
      <input type="hidden" name="selected_items" id="selected_items" value=""> 
      <button type="submit">Wyślij zapytanie</button> 
    </form> 
@@ -756,7 +756,7 @@ footer{ margin-top:12px; font-size:12px; color:var(--muted); }
      <div>
     
     <h2><strong>Regulamin i Polityka Prywatności</strong></h2>
-      <p>Administratorem danych jest Provercel (email: provercel@proton.me).</p>
+      <p>Administratorem danych jest Provercel.</p>
         <p>Dane przesyłane w formularzu są przetwarzane wyłącznie w celu obsługi zapytań dotyczących produktów. 
              Wysłanie formularza oznacza wyrażenie zgody na przetwarzanie danych osobowych zgodnie z obowiązującymi przepisami RODO.</p>
                <p>Użytkownik ma prawo dostępu do swoich danych, ich poprawiania oraz żądania usunięcia.</p>
@@ -1067,7 +1067,7 @@ function updateSummary() {
  hiddenInput.value = selected.length ? selected.map(s => s.replace(/ × /g, 'x')).join('; ') : ''; 
 
 
- formSubject.value = totalQty ? `Zapytanie z Provercel - 3D (${totalQty} szt.)` : 'Zapytanie z Provercel - 3D'; 
+ formSubject.value = totalQty ? `Zapytanie z Provercel - 3D (${totalQty} szt.)` : 'Zapytanie z Provercel'; 
 
 
 } 
