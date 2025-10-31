@@ -87,7 +87,6 @@
       scrollbar-gutter: stable;
     }
 
-    /* === ANIMOWANA OPCJA === */
     .option{
       display:flex;
       align-items:center;
@@ -123,7 +122,6 @@
     }
     .option.selected::before { opacity: 1; }
 
-    /* Checkbox animowany */
     .option input[type="checkbox"]{
       width:18px; height:18px;
       accent-color: var(--accent);
@@ -137,7 +135,6 @@
 
     .option .meta{font-size:13px; color:var(--muted)}
 
-    /* === ANIMOWANY QTY-WRAP (wysuwanie z prawej) === */
     .qty-wrap {
       display: flex;
       align-items: center;
@@ -222,6 +219,43 @@
         <p>Przeglądaj model 3D, wybierz elementy i wyślij zapytanie.</p>
       </header>
 
+      <!-- NOWA SEKCJA TREŚCI -->
+      <section style="margin-top:16px; line-height:1.6; font-size:14px; color:#c8d3de;">
+        <p>
+          <strong>Provercel</strong> to nowoczesne rozwiązania z zakresu <em>barier ochronnych i przemysłowych</em> 
+          projektowane w technologii 3D. Naszym celem jest zapewnienie najwyższego poziomu bezpieczeństwa 
+          w przestrzeniach produkcyjnych, magazynowych i technicznych — od wstępnej koncepcji po gotowy system montażowy.
+        </p>
+
+        <p>
+          Dzięki interaktywnemu podglądowi 3D możesz w czasie rzeczywistym zobaczyć każdy element systemu, 
+          dopasować jego ilość oraz wysłać zapytanie bezpośrednio do naszego działu technicznego.
+        </p>
+
+        <div style="margin-top:14px; display:grid; gap:10px;">
+          <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); border-radius:10px; padding:10px;">
+            <strong>✔ Kompleksowe projekty</strong><br>
+            Od koncepcji po wdrożenie — oferujemy pełną dokumentację 3D oraz wsparcie montażowe.
+          </div>
+
+          <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); border-radius:10px; padding:10px;">
+            <strong>✔ Kompatybilne systemy</strong><br>
+            Wszystkie elementy są modułowe i łączą się w spójny, bezpieczny układ barier.
+          </div>
+
+          <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); border-radius:10px; padding:10px;">
+            <strong>✔ Wizualizacja w przeglądarce</strong><br>
+            Bez instalacji – modele 3D można obracać, powiększać oraz otworzyć w AR (rozszerzona rzeczywistość).
+          </div>
+        </div>
+
+        <p style="margin-top:16px;">
+          Nasze produkty znajdują zastosowanie m.in. w <strong>halach przemysłowych</strong>, 
+          <strong>logistyce</strong>, <strong>infrastrukturze miejskiej</strong> oraz wszędzie tam, 
+          gdzie liczy się trwałość i bezpieczeństwo użytkowników.
+        </p>
+      </section>
+
       <div class="viewer-wrap" style="margin-top:12px;">
         <model-viewer id="mv"
           src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf"
@@ -251,11 +285,12 @@
       </div>
     </div>
 
+    <!-- PANEL BOCZNY -->
     <aside class="controls">
       <div class="panel">
         <label class="section-title">Wybierz elementy</label>
         <div class="options" id="optionsList">
-          <!-- SŁUP -->
+          <!-- Elementy -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Słup stalowy H=1000" data-sku="SLP-1000" 
                    data-model="https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/primary_ion_drive.glb">
@@ -265,12 +300,11 @@
             </div>
             <div class="qty-wrap">
               <span class="qty-label">Ilość:</span>
-              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
+              <input type="number" class="qty" min="1" max="999" value="1">
               <span class="qty-unit">szt.</span>
             </div>
           </label>
 
-          <!-- PRZĘSŁO -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Przęsło proste 2m" data-sku="PRZ-2000" 
                    data-model="https://threejs.org/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb">
@@ -280,12 +314,11 @@
             </div>
             <div class="qty-wrap">
               <span class="qty-label">Ilość:</span>
-              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
+              <input type="number" class="qty" min="1" max="999" value="1">
               <span class="qty-unit">szt.</span>
             </div>
           </label>
 
-          <!-- ZŁĄCZE -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Złącze kątowe 90°" data-sku="ZLK-090" 
                    data-model="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Duck/glTF-Binary/Duck.glb">
@@ -295,12 +328,11 @@
             </div>
             <div class="qty-wrap">
               <span class="qty-label">Ilość:</span>
-              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
+              <input type="number" class="qty" min="1" max="999" value="1">
               <span class="qty-unit">szt.</span>
             </div>
           </label>
 
-          <!-- STOPKA -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Stopka montażowa 150mm" data-sku="STP-150" 
                    data-model="https://threejs.org/examples/models/gltf/Flamingo.glb">
@@ -310,12 +342,11 @@
             </div>
             <div class="qty-wrap">
               <span class="qty-label">Ilość:</span>
-              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
+              <input type="number" class="qty" min="1" max="999" value="1">
               <span class="qty-unit">szt.</span>
             </div>
           </label>
 
-          <!-- OSŁONA -->
           <label class="option">
             <input type="checkbox" class="item-check" data-name="Osłona krawędziowa" data-sku="OSL-001" 
                    data-model="https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/Parrot.glb">
@@ -325,7 +356,7 @@
             </div>
             <div class="qty-wrap">
               <span class="qty-label">Ilość:</span>
-              <input type="number" class="qty" min="1" max="999" value="1" inputmode="numeric">
+              <input type="number" class="qty" min="1" max="999" value="1">
               <span class="qty-unit">szt.</span>
             </div>
           </label>
@@ -339,174 +370,4 @@
         <form id="requestForm" action="https://formsubmit.co/provercel@proton.me" method="POST">
           <input type="text" name="_honey" style="display:none">
           <input type="hidden" name="_next" value="https://provercel.vercel.app/">
-          <input type="hidden" name="_subject" id="formSubject" value="Zapytanie z Provercel - 3D">
-
-          <label class="small">Firma / Imię</label>
-          <input type="text" name="client_name" placeholder="Nazwa firmy lub imię" />
-
-          <label class="small">Adres e-mail</label>
-          <input type="email" name="client_email" placeholder="twoj@proton.me" required />
-
-          <label class="small">Uwagi</label>
-          <textarea name="notes" rows="3" placeholder="Dodatkowe informacje (termin, montaż, itp.)"></textarea>
-
-          <input type="hidden" name="selected_items" id="selected_items" value="">
-
-          <button type="submit">Wyślij zapytanie</button>
-        </form>
-
-        <footer>
-          <div class="small">Wiadomości na <strong>provercel@proton.me</strong>.</div>
-        </footer>
-      </div>
-    </aside>
-  </div>
-
-  <script>
-    const mv = document.getElementById('mv');
-    const optionsList = document.getElementById('optionsList');
-    const summary = document.getElementById('summary');
-    const hiddenInput = document.getElementById('selected_items');
-    const formSubject = document.getElementById('formSubject');
-    const form = document.getElementById('requestForm');
-
-    const DEFAULT_MODEL = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf';
-    let lastClickedModel = DEFAULT_MODEL;
-
-    function loadModel(src, retries = 3) {
-      if (mv.src === src) return;
-      mv.style.opacity = '0.5';
-
-      const onLoad = () => {
-        mv.style.opacity = '1';
-        mv.cameraOrbit = '0deg 75deg 2.5m';
-        mv.jumpCameraToGoal();
-      };
-
-      const onError = (attempt) => {
-        console.warn(`Błąd ładowania modelu (próba ${attempt}): ${src}`);
-        if (attempt < retries) {
-          setTimeout(() => loadModel(src, retries - 1), 1000 * attempt);
-        } else {
-          console.error('Ostateczny błąd – fallback do domyślnego');
-          mv.src = DEFAULT_MODEL;
-          lastClickedModel = DEFAULT_MODEL;
-        }
-      };
-
-      mv.onload = null;
-      mv.onerror = null;
-
-      mv.addEventListener('load', onLoad, { once: true });
-      mv.addEventListener('error', () => onError(1), { once: true });
-
-      mv.src = src;
-    }
-
-    function updateHighlights() {
-      optionsList.querySelectorAll('.option').forEach(option => {
-        const checkbox = option.querySelector('.item-check');
-        option.classList.toggle('selected', checkbox.checked);
-      });
-    }
-
-    optionsList.addEventListener('click', (e) => {
-      const checkbox = e.target.closest('.item-check');
-      if (!checkbox) return;
-
-      const option = checkbox.closest('.option');
-      const qtyWrap = option.querySelector('.qty-wrap');
-
-      if (!e.target.matches('input')) {
-        checkbox.checked = !checkbox.checked;
-        e.preventDefault();
-      }
-
-      lastClickedModel = checkbox.dataset.model;
-
-      // ANIMACJA: używamy klasy .active zamiast display
-      qtyWrap.classList.toggle('active', checkbox.checked);
-
-      if (!checkbox.checked) {
-        const qtyInput = qtyWrap.querySelector('.qty');
-        qtyInput.value = 1;
-      }
-
-      const checked = optionsList.querySelectorAll('.item-check:checked');
-
-      if (checked.length === 0) {
-        loadModel(DEFAULT_MODEL);
-        lastClickedModel = DEFAULT_MODEL;
-      } else if (checkbox.checked) {
-        loadModel(lastClickedModel);
-      } else {
-        if (mv.src === lastClickedModel) {
-          loadModel(checked[0].dataset.model);
-          lastClickedModel = checked[0].dataset.model;
-        }
-      }
-
-      updateSummary();
-      updateHighlights();
-    });
-
-    function updateSummary() {
-      const items = Array.from(optionsList.querySelectorAll('.option'));
-      const selected = [];
-      let totalQty = 0;
-
-      items.forEach(item => {
-        const check = item.querySelector('.item-check');
-        const qtyInput = item.querySelector('.qty');
-        if (check.checked && qtyInput && qtyInput.value >= 1) {
-          const name = check.dataset.name;
-          const sku = check.dataset.sku;
-          const qty = parseInt(qtyInput.value);
-          totalQty += qty;
-          selected.push(`${name} × ${qty}${sku ? ' (' + sku + ')' : ''}`);
-        }
-      });
-
-      summary.textContent = selected.length ? 'Wybrane: ' + selected.join(' • ') : 'Wybrane: brak';
-      hiddenInput.value = selected.length ? selected.map(s => s.replace(/ × /g, 'x')).join('; ') : '';
-      formSubject.value = totalQty ? `Zapytanie z Provercel - 3D (${totalQty} szt.)` : 'Zapytanie z Provercel - 3D';
-    }
-
-    document.getElementById('resetView').addEventListener('click', () => {
-      mv.cameraOrbit = '0deg 75deg 2.5m';
-      mv.jumpCameraToGoal();
-    });
-
-    optionsList.addEventListener('input', (e) => {
-      if (e.target.classList.contains('qty')) {
-        let val = parseInt(e.target.value);
-        if (isNaN(val) || val < 1) e.target.value = 1;
-        if (val > 999) e.target.value = 999;
-        updateSummary();
-      }
-    });
-
-    form.addEventListener('submit', (e) => {
-      const email = form.querySelector('input[name="client_email"]').value.trim();
-      if (!/^\S+@\S+\.\S+$/.test(email)) {
-        alert('Podaj poprawny adres e-mail.');
-        e.preventDefault();
-        return;
-      }
-      try {
-        const cam = mv.getCameraOrbit();
-        const extra = `\n\n---\nWidok 3D: obrót=${cam.theta.toFixed(0)}°, nachylenie=${cam.phi.toFixed(0)}°, odległość=${cam.radius.toFixed(2)}m`;
-        const notesField = form.querySelector('textarea[name="notes"]');
-        notesField.value = (notesField.value.trim() + extra).trim();
-      } catch (err) {}
-    });
-
-    // Inicjalizacja
-    window.addEventListener('load', () => {
-      loadModel(DEFAULT_MODEL);
-      updateSummary();
-      updateHighlights();
-    });
-  </script>
-</body>
-</html>
+          <input type
