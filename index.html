@@ -651,64 +651,67 @@
 
 
 
-<style>
-    /* Pozycja paska */
-      #google_translate_element {
-          position: fixed !important;
-              top: 15px !important;
-                  right: 15px !important;
-                      z-index: 999999 !important;
-                        }
+<!-- PASEK Z NAPISEM "Language" – ciemny i elegancki -->
+<div id="google_translate_element"></div>
 
-                          /* Ciemny przycisk */
-                            .goog-te-gadget-simple {
-                                background: #1f1f1f !important;
-                                    border: none !important;
-                                        border-radius: 8px !important;
-                                            padding: 10px 18px !important;
-                                                font-size: 14px !important;
-                                                    box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
-                                                      }
-                                                        .goog-te-gadget-simple a { color: #fff !important; text-decoration: none !important; }
-                                                          .goog-te-gadget-simple:hover { background: #333 !important; }
-
-                                                            
-                                                              body > .goog-te-gadget-simple,
-                                                                div:not([class]) > .goog-te-gadget-simple,
-                                                                  .goog-te-gadget-simple > span > a {
-                                                                      visibility: hidden !important;
-                                                                          position: relative !important;
-                                                                            }
-                                                                              .goog-te-gadget-simple > span > a:after,
-                                                                                body > .goog-te-gadget-simple:after {
-                                                                                    content: "Language ▼";   /* ← TU ZMIENIASZ NA CO CHCESZ */
-                                                                                        visibility: visible !important;
-                                                                                            position: absolute !important;
-                                                                                                left: 0 !important;
-                                                                                                    top: 0 !important;
-                                                                                                        color: white !important;
-                                                                                                            font-weight: 500;
-                                                                                                                width: 100%;
-                                                                                                                    height: 100%;
-                                                                                                                        display: flex;
-                                                                                                                            align-items: center;
-                                                                                                                                justify-content: center;
-                                                                                                                                  }
-                                                                                                                                    
-
-                                                                                                                                      /* Ciemne menu rozwijane */
-                                                                                                                                        .goog-te-menu-frame { 
-                                                                                                                                            background: #1f1f1f !important; 
-                                                                                                                                                border: 1px solid #444 !important; 
-                                                                                                                                                    box-shadow: 0 10px 30px rgba(0,0,0,0.6) !important; 
-                                                                                                                                                      }
-                                                                                                                                                        .goog-te-menu-frame a { color: #ddd !important; }
-                                                                                                                                                          .goog-te-menu-frame a:hover { background: #333 !important; color: white !important; }
-
-                                                                                                                                                            /* Ukrywamy śmieci Google */
-                                                                                                                                                              .goog-logo-box, .goog-te-gadget-icon, img[src*="google"], span:not([class]) { display: none !important; }
-                                                                                                                                                              </style>
-
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+            pageLanguage: 'pl',
+                  includedLanguages: 'en,de,nl,fr,es,it,sv,da,no',
+                        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                              autoDisplay: false
+                                  }, 'google_translate_element');
+                                    }
+                                    </script>
+                                    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                                    
+                                    <style>
+                                      #google_translate_element { position:fixed; top:15px; right:15px; z-index:9999; }
+                                      
+                                        .goog-te-gadget-simple {
+                                            background:#1f1f1f !important;
+                                                border:none !important;
+                                                    border-radius:8px !important;
+                                                        padding:10px 18px !important;
+                                                            font-size:14px !important;
+                                                                font-family:inherit !important;
+                                                                    box-shadow:0 4px 20px rgba(0,0,0,0.4);
+                                                                      }
+                                                                        .goog-te-gadget-simple a { color:#fff !important; text-decoration:none !important; }
+                                                                        
+                                                                          /* ZMIENIAMY TEKST NA "Language" */
+                                                                            .goog-te-gadget-simple span:first-child a {
+                                                                                display: inline-block !important;
+                                                                                  }
+                                                                                    .goog-te-gadget-simple > span > a:first-child {
+                                                                                        visibility: hidden !important;
+                                                                                            position: relative !important;
+                                                                                              }
+                                                                                                .goog-te-gadget-simple > span > a:first-child:after {
+                                                                                                    content: "Language ▼";   /* ← tu możesz zmienić na "EN ▼" albo "Język" */
+                                                                                                        visibility: visible !important;
+                                                                                                            position: absolute !important;
+                                                                                                                left: 0 !important;
+                                                                                                                    top: 0 !important;
+                                                                                                                        color: white !important;
+                                                                                                                            font-weight: 500;
+                                                                                                                              }
+                                                                                                                              
+                                                                                                                                .goog-te-gadget-simple:hover { background:#333 !important; }
+                                                                                                                                
+                                                                                                                                  /* ciemne menu rozwijane */
+                                                                                                                                    .goog-te-menu-frame {
+                                                                                                                                        background:#1f1f1f !important;
+                                                                                                                                            border:1px solid #444 !important;
+                                                                                                                                                box-shadow:0 10px 30px rgba(0,0,0,0.6) !important;
+                                                                                                                                                  }
+                                                                                                                                                    .goog-te-menu-frame a { color:#ddd !important; }
+                                                                                                                                                      .goog-te-menu-frame a:hover { background:#333 !important; color:white !important; }
+                                                                                                                                                      
+                                                                                                                                                        /* chowamy śmieci Google */
+                                                                                                                                                          .goog-logo-box, .goog-te-gadget span:not([class]), .goog-te-gadget-icon { display:none !important; }
+                                                                                                                                                          </style>-->
 
 
 
