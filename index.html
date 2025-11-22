@@ -649,28 +649,66 @@ footer{ margin-top:12px; font-size:12px; color:var(--muted); }
 
 
 
-<script src="https://cdn.jsdelivr.net/npm/@transifex/native@latest/dist/browser.js"></script>
-<script>
-  const tnx = window.transifexNative;
-    tnx.init({
-        token: 'public-token-here', // możesz pominąć przy prostym Google Translate
-          });
-          </script>
+<!-- 1. Wstaw zwykły kod Google Translate (ten sam co wcześniej) -->
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+            pageLanguage: 'pl',
+                  includedLanguages: 'en,de,nl,fr,es,it,sv',
+                        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                              autoDisplay: false
+                                  }, 'google_translate_element');
+                                    }
+                                    </script>
+                                    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                                    
+                                    <!-- 2. Miejsce na pasek -->
+                                    <div id="google_translate_element"></div>
+                                    
+                                    <!-- 3. CSS – wrzuć to w <head> albo w swój plik styles.css -->
+                                    <style>
+                                      /* Ukrywa brzydki napis "Wybierz język" */
+                                        .goog-te-gadget-simple {
+                                            background-color: #1f1f1f !important;   /* ciemne tło */
+                                                border: none !important;
+                                                    border-radius: 8px !important;
+                                                        padding: 8px 12px !important;
+                                                            font-size: 14px !important;
+                                                                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                                                                  }
+                                                                  
+                                                                    /* Strzałka i tekst w środku */
+                                                                      .goog-te-gadget-simple a {
+                                                                          color: #ffffff !important;
+                                                                            }
+                                                                            
+                                                                              /* Kolor po najechaniu */
+                                                                                .goog-te-gadget-simple:hover {
+                                                                                    background-color: #333333 !important;
+                                                                                      }
+                                                                                      
+                                                                                        /* Cały rozwijany menu też ciemne (najważniejsze!) */
+                                                                                          .goog-te-menu-value span:first-child { color: white !important; }
+                                                                                            .goog-te-menu-frame {
+                                                                                                background: #1f1f1f !important;
+                                                                                                    border: 1px solid #444 !important;
+                                                                                                        box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
+                                                                                                          }
+                                                                                                            .goog-te-menu-frame a {
+                                                                                                                color: #ccc !important;
+                                                                                                                  }
+                                                                                                                    .goog-te-menu-frame a:hover {
+                                                                                                                        background: #333 !important;
+                                                                                                                            color: white !important;
+                                                                                                                              }
+                                                                                                                              
+                                                                                                                                /* Ukrywa ten głupi link „Powered by Google” (legalne, bo nie uszkadza funkcjonalności) */
+                                                                                                                                  .goog-logo-box, .goog-te-gadget span:not([class]) {
+                                                                                                                                      display: none !important;
+                                                                                                                                        }
+                                                                                                                                        </style>-->
 
-          <!-- LUB jeszcze prostsze – wstaw to gdziekolwiek w <head>: -->
-          <script>
-            function googleTranslateElementInit() {
-                new google.translate.TranslateElement({
-                      pageLanguage: 'pl',
-                            includedLanguages: 'en,de,nl,sv,no,da,fr', // dodaj ile chcesz
-                                  layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                                        autoDisplay: false
-                                            }, 'google_translate_element');
-                                              }
-                                              </script>
-                                              <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-                                              <div id="google_translate_element" style="position:fixed; top:10px; right:10px; z-index:9999;"></div>
 
 
 
