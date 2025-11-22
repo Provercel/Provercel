@@ -651,23 +651,23 @@
 
 
 
-<!-- GOOGLE TRANSLATE – WLEPIJ TU, PRZED </BODY> -->
+ <!-- PASEK Z NAPISEM "Language" – GUARANTOWANY -->
 <div id="google_translate_element"></div>
 
 <script type="text/javascript">
   function googleTranslateElementInit() {
-      new window.google.translate.TranslateElement({
+      new google.translate.TranslateElement({
             pageLanguage: 'pl',
                   includedLanguages: 'en,de,nl,fr,es,it,sv,da,no',
-                        layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+                        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
                               autoDisplay: false
                                   }, 'google_translate_element');
                                       
-                                          // Wymuś napis "Language ▼" po 1,5 sekundy (gwarantowane)
+                                          // Wymuś napis po załadowaniu
                                               setTimeout(function() {
-                                                    const link = document.querySelector('.goog-te-gadget-simple a');
-                                                          if (link && link.textContent.trim().toLowerCase().includes('wybierz') || link.textContent.trim() === '') {
-                                                                  link.innerHTML = '<span>Language ▼</span>';
+                                                    var elem = document.querySelector('.goog-te-gadget-simple a');
+                                                          if (elem && elem.textContent.includes('Wybierz')) {
+                                                                  elem.textContent = 'Language ▼';
                                                                         }
                                                                             }, 1500);
                                                                               }
@@ -675,49 +675,88 @@
                                                                               <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
                                                                               
                                                                               <style>
-                                                                                /* Pozycja i ciemny styl – wklej w <head> lub tu, jeśli nie masz osobnego CSS */
-                                                                                  #google_translate_element {
-                                                                                      position: fixed !important;
-                                                                                          top: 15px !important;
-                                                                                              right: 15px !important;
-                                                                                                  z-index: 99999 !important;
-                                                                                                    }
-                                                                                                      .goog-te-gadget-simple {
-                                                                                                          background: #1f1f1f !important;
-                                                                                                              border: none !important;
-                                                                                                                  border-radius: 8px !important;
-                                                                                                                      padding: 10px 16px !important;
-                                                                                                                          font-size: 14px !important;
-                                                                                                                              box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
-                                                                                                                                  min-width: 120px !important;
-                                                                                                                                    }
-                                                                                                                                      .goog-te-gadget-simple a, .goog-te-gadget-simple span {
-                                                                                                                                          color: #fff !important;
-                                                                                                                                              text-decoration: none !important;
-                                                                                                                                                  font-weight: 500 !important;
-                                                                                                                                                    }
-                                                                                                                                                      .goog-te-gadget-simple:hover {
-                                                                                                                                                          background: #333 !important;
-                                                                                                                                                            }
-                                                                                                                                                              /* Ciemne menu */
-                                                                                                                                                                .goog-te-menu-frame {
-                                                                                                                                                                    background: #1f1f1f !important;
-                                                                                                                                                                        border: 1px solid #444 !important;
-                                                                                                                                                                            box-shadow: 0 10px 30px rgba(0,0,0,0.6) !important;
-                                                                                                                                                                              }
-                                                                                                                                                                                .goog-te-menu-frame a {
-                                                                                                                                                                                    color: #ddd !important;
-                                                                                                                                                                                      }
-                                                                                                                                                                                        .goog-te-menu-frame a:hover {
-                                                                                                                                                                                            background: #333 !important;
-                                                                                                                                                                                                color: white !important;
-                                                                                                                                                                                                  }
-                                                                                                                                                                                                    /* Ukryj logo Google */
-                                                                                                                                                                                                      .goog-logo-box, .goog-te-gadget-icon, .skiptranslate {
-                                                                                                                                                                                                          display: none !important;
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                            </style>
-                                                                                                                                                                                                            <!-- KONIEC GOOGLE TRANSLATE -->
+                                                                                #google_translate_element { position:fixed; top:15px; right:15px; z-index:9999; }
+                                                                                
+                                                                                  .goog-te-gadget-simple {
+                                                                                      background:#1f1f1f !important;
+                                                                                          border:none !important;
+                                                                                              border-radius:8px !important;
+                                                                                                  padding:10px 16px !important;
+                                                                                                      font-size:14px !important;
+                                                                                                          box-shadow:0 4px 20px rgba(0,0,0,0.4) !important;
+                                                                                                            }
+                                                                                                              .goog-te-gadget-simple a { 
+                                                                                                                  color:#fff !important; 
+                                                                                                                      text-decoration:none !important; 
+                                                                                                                          visibility: visible !important;  /* Wymuś widoczność */
+                                                                                                                            }
+                                                                                                                              .goog-te-gadget-simple:hover { background:#333 !important; }
+                                                                                                                              
+                                                                                                                                .goog-te-menu-frame { background:#1f1f1f !important; border:1px solid #444 !important; box-shadow:0 10px 30px rgba(0,0,0,0.6) !important; }
+                                                                                                                                  .goog-te-menu-frame a { color:#ddd !important; }
+                                                                                                                                    .goog-te-menu-frame a:hover { background:#333 !important; color:white !important; }
+                                                                                                                                    
+                                                                                                                                      .goog-logo-box, .goog-te-gadget-icon { display:none !important; }
+                                                                                                                                      </style>--> 
+          
+              
+                            
+                                
+                                      
+                              
+                                      
+                                        
+                                              
+                                                          
+                                                                        
+                                                                            
+                                                                              
+                                                                            
+                                                                      
+                                                                              
+                                                                              
+                                                                            
+                                                                                  
+                                                                                    
+                                                                                
+                                                                                              
+                                                                                              
+                                                                                                    
+                                                                                            
+                                                                                                
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                                    
+                                                                                                                              
+                                                                                                                        
+                                                                                                                                    
+                                                                                                                            
+                                                                                                                                
+                                                                                                                                      
+                                                                                                                                            
+                                                                                                                                                    
+                                                                                                                                                      
+                                                                                                                                                          
+                                                                                                                                                            
+                                                                                                                                                            
+                                                                                                                                                            
+                                                                                                                                                          
+                                                                                                                                                              
+                                                                                                                                                                  
+                                                                                                                                                                              
+                                                                                                                                                                          
+                                                                                                                                                                            
+                                                                                                                                                                                      
+                                                                                                                                                                                
+                                                                                                                                                                                  
+                                                                                                                                                                                        
+                                                                                                                                                                                                  
+                                                                                                                                                                                              
+                                                                                                                                                                                            
+                                                                                                                                                                                                    
+                                                                                                                                                                                                            
+                                                                                                                                                                                                
 
 
 
